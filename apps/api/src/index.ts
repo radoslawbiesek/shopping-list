@@ -1,7 +1,8 @@
 import { getConfig } from './config/config';
-import { fastify } from './server';
+import { createServer } from './server';
 
 async function startServer() {
+  const fastify = await createServer();
   try {
     const address = await fastify.listen({ port: getConfig('PORT') });
     console.log(`Server listening at ${address}`);

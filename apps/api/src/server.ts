@@ -1,7 +1,15 @@
 import Fastify from 'fastify';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 
-const fastify = Fastify({ logger: true });
+export async function createServer() {
+  const fastify = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
-fastify.get('/', () => 'Hello world');
+  await fastify.register(import('@fastify/sensible'));
 
-export { fastify };
+  await fastify.register(import('./db/db'));
+  await fastify.register(import('./auth/auth.routes'));
+
+  fastify.get('/', () => 'Hello world');
+
+  return fastify;
+}
