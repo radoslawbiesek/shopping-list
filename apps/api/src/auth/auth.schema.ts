@@ -22,3 +22,17 @@ export const registerSchema = {
     }),
   },
 };
+
+export const loginSchema = {
+  body: Type.Object({
+    email: Type.String(),
+    password: Type.String(),
+  }),
+  response: {
+    200: Type.Object({
+      data: Type.Object({
+        token: Type.String(),
+      }),
+    }),
+  },
+};

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { FastifyPluginAsync } from 'fastify';
 import FP from 'fastify-plugin';
 
@@ -8,7 +8,7 @@ declare module 'fastify' {
   }
 }
 
-const db: FastifyPluginAsync = async (fastify, options) => {
+const db: FastifyPluginAsync = async (fastify) => {
   const prisma = new PrismaClient();
 
   fastify.addHook('onClose', () => prisma.$disconnect());

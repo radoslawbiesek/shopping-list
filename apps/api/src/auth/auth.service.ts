@@ -1,10 +1,10 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { FastifyInstance } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { UserSchema } from './auth.schema';
-import { getConfig } from '../config/config';
+import { getEnvVariable } from '../config/config';
 
 export async function createUser(
   fastify: FastifyInstance,
@@ -12,7 +12,7 @@ export async function createUser(
 ): Promise<UserSchema> {
   try {
     const { password } = userCreateInput;
-    const hashedPassword = await bcrypt.hash(password, getConfig('BCRYPT_SALT_OR_ROUNDS'));
+    const hashedPassword = await bcrypt.hash(password, getEnvVariable('BCRYPT_SALT_OR_ROUNDS'));
     const user = await fastify.db.user.create({
       data: { ...userCreateInput, password: hashedPassword },
     });
@@ -34,4 +34,33 @@ export async function createUser(
 
     throw error;
   }
+}
+
+export async function validatePassword(
+  fastify: FastifyInstance,
+  userLoginInput: { email: string; password: string },
+): Promise<User> {
+  try {
+    const { email, password } = userLoginInput;
+    const user = await fastify.db.user.findFirst({ where: { email } });
+    const isValid = user && (await bcrypt.compare(password, user.password));
+    if (!isValid) {
+      throw fastify.httpErrors.badRequest('no active account found with the given credentials');
+    }
+
+    return user;
+  } catch (error) {
+    throw fastify.httpErrors.badRequest('no active account found with the given credentials');
+  }
+}
+
+export async function createToken(
+  fastify: FastifyInstance,
+  user: User,
+): Promise<{ token: string }> {
+  const { email, id } = user;
+  const payload = { email, id };
+  const token = fastify.jwt.sign(payload);
+
+  return { token };
 }

@@ -6,10 +6,13 @@ export async function createServer() {
 
   await fastify.register(import('@fastify/sensible'));
 
+  await fastify.register(import('./auth/jwt.plugin'));
+
   await fastify.register(import('./db/db'));
+
   await fastify.register(import('./auth/auth.routes'));
 
-  fastify.get('/', () => 'Hello world');
+  fastify.get('/', { onRequest: [fastify.authenticate] }, () => 'Hello world');
 
   return fastify;
 }
