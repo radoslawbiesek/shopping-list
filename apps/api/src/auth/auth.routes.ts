@@ -1,8 +1,8 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
 
-import { loginSchema, registerSchema } from './auth.schema';
-import { createToken, createUser, validatePassword } from './auth.service';
+import { loginSchema, meSchema, registerSchema } from './auth.schema';
+import { createToken, createUser, getUserByEmail, validatePassword } from './auth.service';
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -27,6 +27,17 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
       return {
         data,
       };
+    },
+  });
+
+  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+    url: '/auth/me',
+    method: 'GET',
+    onRequest: [fastify.authenticate],
+    schema: meSchema,
+    async handler(request) {
+      const user = await getUserByEmail(fastify, request.user.email);
+      return { data: user };
     },
   });
 };

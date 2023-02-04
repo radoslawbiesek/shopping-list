@@ -36,6 +36,15 @@ export async function createUser(
   }
 }
 
+export async function getUserByEmail(fastify: FastifyInstance, email: string): Promise<UserSchema> {
+  const user = await fastify.db.user.findFirst({ where: { email } });
+  return {
+    ...user,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.createdAt.toISOString(),
+  };
+}
+
 export async function validatePassword(
   fastify: FastifyInstance,
   userLoginInput: { email: string; password: string },

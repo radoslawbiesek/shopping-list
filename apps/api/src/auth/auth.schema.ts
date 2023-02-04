@@ -36,3 +36,11 @@ export const loginSchema = {
     }),
   },
 };
+
+export const meSchema = {
+  response: {
+    200: Type.Object({
+      data: userSchema,
+    }),
+  },
+};

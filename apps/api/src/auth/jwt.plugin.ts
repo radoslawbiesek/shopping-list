@@ -9,6 +9,18 @@ declare module 'fastify' {
   }
 }
 
+type TokenPayload = {
+  id: number;
+  email: string;
+};
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    payload: TokenPayload;
+    user: TokenPayload;
+  }
+}
+
 const jwtPlugin: FastifyPluginAsync = async (fastify) => {
   await fastify.register(import('@fastify/jwt'), {
     secret: getEnvVariable('JWT_SECRET'),
