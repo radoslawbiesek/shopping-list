@@ -63,13 +63,10 @@ export async function validatePassword(
   }
 }
 
-export async function createToken(
-  fastify: FastifyInstance,
-  user: User,
-): Promise<{ token: string }> {
+export async function createToken(fastify: FastifyInstance, user: User): Promise<string> {
   const { email, id } = user;
   const payload = { email, id };
   const token = fastify.jwt.sign(payload);
 
-  return { token };
+  return token;
 }

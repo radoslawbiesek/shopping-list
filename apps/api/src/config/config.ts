@@ -1,5 +1,5 @@
 export function getEnvVariable(name: 'PORT'): number;
-export function getEnvVariable(name: 'NODE_ENV'): 'development';
+export function getEnvVariable(name: 'NODE_ENV'): 'development' | 'test';
 export function getEnvVariable(name: 'BCRYPT_SALT_OR_ROUNDS'): string | number;
 export function getEnvVariable(name: 'JWT_SECRET'): string;
 export function getEnvVariable(name: 'JWT_EXPIRES_IN'): string;

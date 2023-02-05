@@ -4,7 +4,9 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { getEnvVariable } from './config/config';
 
 export async function startServer() {
-  const fastify = Fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
+  const fastify = Fastify({
+    logger: getEnvVariable('NODE_ENV') !== 'test',
+  }).withTypeProvider<TypeBoxTypeProvider>();
 
   await fastify.register(import('@fastify/sensible'));
 
@@ -17,7 +19,10 @@ export async function startServer() {
   fastify.get('/', { onRequest: [fastify.authenticate] }, () => 'Hello world');
 
   const address = await fastify.listen({ port: getEnvVariable('PORT') });
-  console.log(`Server listening at ${address}`);
+
+  if (getEnvVariable('NODE_ENV') !== 'test') {
+    console.log(`Server listening at ${address}`);
+  }
 
   return fastify;
 }

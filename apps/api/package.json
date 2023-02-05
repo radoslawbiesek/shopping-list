@@ -10,6 +10,7 @@
     "posttest": "docker-compose stop test-db && docker-compose rm -f test-db"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@fastify/jwt": "^6.5.0",
     "@fastify/sensible": "^5.2.0",
     "@fastify/type-provider-typebox": "^2.4.0",
