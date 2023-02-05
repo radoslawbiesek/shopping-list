@@ -15,6 +15,4 @@ const db: FastifyPluginAsync = async (fastify) => {
   fastify.decorate('db', prisma);
 };
 
-const dbPlugin = FP(db);
-
-export default dbPlugin;
+export default FP(db);

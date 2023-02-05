@@ -9,3 +9,12 @@ services:
       - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=postgres
+
+  test-db:
+    container_name: shopping-list-test-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres

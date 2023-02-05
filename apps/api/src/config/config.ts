@@ -4,7 +4,12 @@ export function getEnvVariable(name: 'BCRYPT_SALT_OR_ROUNDS'): string | number;
 export function getEnvVariable(name: 'JWT_SECRET'): string;
 export function getEnvVariable(name: 'JWT_EXPIRES_IN'): string;
 export function getEnvVariable(name: string): number | string | undefined {
-  const value = process.env[name];
+  let value = process.env[name];
+
+  if (process.env['NODE_ENV'] === 'test') {
+    value = process.env[`TEST_${name}`] || value;
+  }
+
   switch (name) {
     case 'NODE_ENV':
       return value || 'development';
