@@ -1,6 +1,7 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
+import { stringifyDates } from '../utils/format';
 
 import { createCategorySchema, getAllCategoriesSchema } from './categories.schema';
 
@@ -19,11 +20,7 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
           },
         });
 
-        return {
-          ...category,
-          createdAt: category.createdAt.toISOString(),
-          updatedAt: category.updatedAt.toISOString(),
-        };
+        return stringifyDates(category);
       } catch (error) {
         if (isPrismaError(error)) {
           if (error.code === PrismaErrorCode.UniqueKeyViolation) {
@@ -48,11 +45,7 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
         where: { createdBy: request.user.id },
       });
 
-      return categories.map((category) => ({
-        ...category,
-        createdAt: category.createdAt.toISOString(),
-        updatedAt: category.updatedAt.toISOString(),
-      }));
+      return categories.map(stringifyDates);
     },
   });
 };

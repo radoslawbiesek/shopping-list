@@ -1,8 +1,11 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
+import { stringifyDates } from '../utils/format';
+import * as bcrypt from 'bcrypt';
 
 import { loginSchema, meSchema, registerSchema } from './auth.schema';
-import { createToken, createUser, getUserByEmail, validatePassword } from './auth.service';
+import { getEnvVariable } from '../config/config';
+import { isPrismaError, PrismaErrorCode } from '../db/errors';
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -10,7 +13,26 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'POST',
     schema: registerSchema,
     async handler(request) {
-      return await createUser(fastify, request.body);
+      try {
+        const { password } = request.body;
+        const hashedPassword = await bcrypt.hash(password, getEnvVariable('BCRYPT_SALT_OR_ROUNDS'));
+        const user = await fastify.db.user.create({
+          data: { ...request.body, password: hashedPassword },
+        });
+
+        return stringifyDates(user);
+      } catch (error: unknown) {
+        if (isPrismaError(error)) {
+          if (error.code === PrismaErrorCode.UniqueKeyViolation) {
+            if (Array.isArray(error.meta.target)) {
+              const fieldName = error.meta.target[0];
+              throw fastify.httpErrors.badRequest(`${fieldName} is already taken`);
+            }
+          }
+        }
+
+        throw error;
+      }
     },
   });
 
@@ -19,8 +41,15 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'POST',
     schema: loginSchema,
     async handler(request) {
-      const user = await validatePassword(fastify, request.body);
-      const token = await createToken(fastify, user);
+      const { email, password } = request.body;
+      const user = await fastify.db.user.findFirst({ where: { email } });
+      const isValid = user && (await bcrypt.compare(password, user.password));
+      if (!isValid) {
+        throw fastify.httpErrors.badRequest('no active account found with the given credentials');
+      }
+
+      const token = await fastify.jwt.sign(user);
+
       return { token };
     },
   });
@@ -31,7 +60,9 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     onRequest: [fastify.authenticate],
     schema: meSchema,
     async handler(request) {
-      return await getUserByEmail(fastify, request.user.email);
+      const user = await fastify.db.user.findFirst({ where: { id: request.user.id } });
+
+      return stringifyDates(user);
     },
   });
 };

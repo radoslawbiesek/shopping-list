@@ -4,7 +4,6 @@ import { Category, User } from '@prisma/client';
 
 import { startServer } from '../server';
 import { mockCategory, mockUser } from './utils/mock';
-import { createToken } from '../auth/auth.service';
 
 let fastify: FastifyInstance;
 let user: User;
@@ -13,7 +12,7 @@ let client;
 beforeAll(async () => {
   fastify = await startServer();
   user = await mockUser(fastify);
-  const token = await createToken(fastify, user);
+  const token = await fastify.jwt.sign(user);
 
   client = (options: InjectOptions) => {
     return fastify
