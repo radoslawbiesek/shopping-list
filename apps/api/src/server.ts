@@ -10,6 +10,19 @@ export async function startServer() {
 
   await fastify.register(import('@fastify/sensible'));
 
+  await fastify.register(import('@fastify/swagger'), {
+    mode: 'dynamic',
+    openapi: {
+      info: {
+        title: `Shopping List API (${getEnvVariable('NODE_ENV')})`,
+        version: getEnvVariable('VERSION'),
+      },
+    },
+  });
+  await fastify.register(import('@fastify/swagger-ui'), {
+    routePrefix: '/docs',
+  });
+
   await fastify.register(import('./auth/jwt.plugin'));
 
   await fastify.register(import('./db/db'));

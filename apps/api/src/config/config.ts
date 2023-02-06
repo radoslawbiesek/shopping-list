@@ -3,6 +3,7 @@ export function getEnvVariable(name: 'NODE_ENV'): 'development' | 'test';
 export function getEnvVariable(name: 'BCRYPT_SALT_OR_ROUNDS'): string | number;
 export function getEnvVariable(name: 'JWT_SECRET'): string;
 export function getEnvVariable(name: 'JWT_EXPIRES_IN'): string;
+export function getEnvVariable(name: 'VERSION'): string;
 export function getEnvVariable(name: string): number | string | undefined {
   let value = process.env[name];
 
@@ -22,6 +23,8 @@ export function getEnvVariable(name: string): number | string | undefined {
       return value || 'secret';
     case 'JWT_EXPIRES_IN':
       return value || '8h';
+    case 'VERSION':
+      return '0.0.0';
   }
 
   return value;
