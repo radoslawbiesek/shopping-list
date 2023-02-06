@@ -11,10 +11,23 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String   @unique
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String     @unique
   password  String
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt() @db.Timestamptz(6)
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
+  Category  Category[]
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  name          String     @unique
+  parentId      Int?
+  parent        Category?  @relation("Subcategory", fields: [parentId], references: [id])
+  children      Category[] @relation("Subcategory")
+  createdBy     Int
+  createdByUser User       @relation(fields: [createdBy], references: [id])
+  createdAt     DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime   @updatedAt() @db.Timestamptz(6)
 }

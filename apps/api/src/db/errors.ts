@@ -6,4 +6,5 @@ export function isPrismaError(error: unknown): error is Prisma.PrismaClientKnown
 
 export const PrismaErrorCode = {
   UniqueKeyViolation: 'P2002',
+  ForeignKeyViolation: 'P2003',
 };

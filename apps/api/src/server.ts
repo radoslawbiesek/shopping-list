@@ -28,6 +28,7 @@ export async function startServer() {
   await fastify.register(import('./db/db'));
 
   await fastify.register(import('./auth/auth.routes'));
+  await fastify.register(import('./categories/categories.routes'));
 
   fastify.get('/', { onRequest: [fastify.authenticate] }, () => 'Hello world');
 
