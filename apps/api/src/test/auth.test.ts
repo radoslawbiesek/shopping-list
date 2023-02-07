@@ -2,18 +2,14 @@ import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 
 import { startServer } from '../server';
+import { createClient } from './utils/client';
 
 let fastify: FastifyInstance;
 let client;
 
 beforeAll(async () => {
   fastify = await startServer();
-  client = (options: InjectOptions) => {
-    return fastify.inject(options).then((res) => ({
-      ...res,
-      body: JSON.parse(res.body),
-    }));
-  };
+  client = createClient(fastify);
 });
 
 afterAll(async () => {
