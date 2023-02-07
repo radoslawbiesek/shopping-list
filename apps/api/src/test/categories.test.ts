@@ -1,4 +1,4 @@
-import { FastifyInstance, HTTPMethods, InjectOptions } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { Category, User } from '@prisma/client';
 
@@ -24,7 +24,7 @@ afterAll(async () => {
   await fastify.close();
 });
 
-describe.only('[Categories] - /category', () => {
+describe.only('[Categories] - /categories', () => {
   describe('authentication', () => {
     it.each([['GET'], ['POST']])(
       '%s request requires authentication',
@@ -42,7 +42,7 @@ describe.only('[Categories] - /category', () => {
     );
   });
 
-  describe('Create [POST /category]', () => {
+  describe('Create [POST /categories]', () => {
     describe('validation', () => {
       const name = faker.random.alpha(8);
       it('name is required', async () => {
@@ -154,7 +154,7 @@ describe.only('[Categories] - /category', () => {
     });
   });
 
-  describe('Get all [GET /category]', () => {
+  describe('Get all [GET /categories]', () => {
     it('lists all categories', async () => {
       const names = ['test1', 'test2', 'test3'];
       await Promise.all(names.map((name) => mockCategory(fastify, user.id, { name })));
