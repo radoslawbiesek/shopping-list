@@ -30,8 +30,6 @@ export async function startServer() {
   await fastify.register(import('./auth/auth.routes'));
   await fastify.register(import('./categories/categories.routes'));
 
-  fastify.get('/', { onRequest: [fastify.authenticate] }, () => 'Hello world');
-
   const address = await fastify.listen({ port: getEnvVariable('PORT') });
 
   if (getEnvVariable('NODE_ENV') !== 'test') {
