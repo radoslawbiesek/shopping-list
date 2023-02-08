@@ -11,9 +11,10 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     onRequest: [fastify.authenticate],
     schema: createListSchema,
     async handler(request) {
+      const { name } = request.body;
       const list = await fastify.db.list.create({
         data: {
-          ...request.body,
+          name,
           createdBy: request.user.id,
         },
       });

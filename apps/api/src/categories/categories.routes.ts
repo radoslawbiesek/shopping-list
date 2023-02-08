@@ -11,11 +11,14 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'POST',
     onRequest: [fastify.authenticate],
     schema: createCategorySchema,
+
     async handler(request) {
       try {
+        const { name, parentId } = request.body;
         const category = await fastify.db.category.create({
           data: {
-            ...request.body,
+            name,
+            parentId,
             createdBy: request.user.id,
           },
         });

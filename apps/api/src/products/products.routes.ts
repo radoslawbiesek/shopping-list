@@ -12,9 +12,13 @@ const productsRoutes: FastifyPluginAsync = async (fastify) => {
     schema: createProductSchema,
     async handler(request) {
       try {
+        const { name, description, image, categoryId } = request.body;
         const product = await fastify.db.product.create({
           data: {
-            ...request.body,
+            name,
+            description,
+            image,
+            categoryId,
             createdBy: request.user.id,
           },
         });

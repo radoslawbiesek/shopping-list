@@ -14,10 +14,10 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     schema: registerSchema,
     async handler(request) {
       try {
-        const { password } = request.body;
+        const { name, email, password } = request.body;
         const hashedPassword = await bcrypt.hash(password, getEnvVariable('BCRYPT_SALT_OR_ROUNDS'));
         const user = await fastify.db.user.create({
-          data: { ...request.body, password: hashedPassword },
+          data: { name, email, password: hashedPassword },
         });
 
         return stringifyDates(user);
