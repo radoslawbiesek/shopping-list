@@ -42,7 +42,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     schema: loginSchema,
     async handler(request) {
       const { email, password } = request.body;
-      const user = await fastify.db.user.findFirst({ where: { email } });
+      const user = await fastify.db.user.findUnique({ where: { email } });
       const isValid = user && (await bcrypt.compare(password, user.password));
       if (!isValid) {
         throw fastify.httpErrors.badRequest('no active account found with the given credentials');
@@ -60,7 +60,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     onRequest: [fastify.authenticate],
     schema: meSchema,
     async handler(request) {
-      const user = await fastify.db.user.findFirst({ where: { id: request.user.id } });
+      const user = await fastify.db.user.findUnique({ where: { id: request.user.id } });
 
       return stringifyDates(user);
     },
