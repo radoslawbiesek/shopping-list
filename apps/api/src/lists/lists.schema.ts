@@ -1,26 +1,24 @@
 import { Type } from '@sinclair/typebox';
 
-const categorySchema = Type.Object({
+const listSchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
-  parentId: Type.Union([Type.Null(), Type.Integer()]),
   createdAt: Type.String({ format: 'date-time' }),
   updatedAt: Type.String({ format: 'date-time' }),
   createdBy: Type.Number(),
 });
 
-export const createCategorySchema = {
+export const createListSchema = {
   body: Type.Object({
     name: Type.String({ minLength: 4, maxLength: 25 }),
-    parentId: Type.Optional(Type.Integer()),
   }),
   response: {
-    200: categorySchema,
+    200: listSchema,
   },
 };
 
-export const getAllCategoriesSchema = {
+export const getAllListsSchema = {
   response: {
-    200: Type.Array(categorySchema),
+    200: Type.Array(listSchema),
   },
 };

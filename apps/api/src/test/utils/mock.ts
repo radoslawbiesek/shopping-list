@@ -1,7 +1,9 @@
-import { FastifyInstance } from 'fastify';
+import { Category, PrismaClient, Product, User, List } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
-export async function mockUser(fastify: FastifyInstance, overrides = {}) {
+const prisma = new PrismaClient();
+
+export async function mockUser(overrides: Partial<User> = {}) {
   const data = {
     email: faker.internet.email(),
     password: faker.internet.password(8),
@@ -9,38 +11,61 @@ export async function mockUser(fastify: FastifyInstance, overrides = {}) {
     ...overrides,
   };
 
-  return await fastify.db.user.create({ data });
+  return await prisma.user.create({ data });
 }
 
-export async function mockCategory(fastify: FastifyInstance, userId: number, overrides = {}) {
-  const data = {
-    createdBy: userId,
-    name: faker.random.alpha(8),
-    ...overrides,
-  };
-
-  return await fastify.db.category.create({ data });
-}
-
-export async function mockProduct(
-  fastify: FastifyInstance,
-  userId: number,
-  categoryId?: number,
-  overrides = {},
-) {
-  let catId = categoryId;
-  if (!catId) {
-    const category = await mockCategory(fastify, userId);
-    catId = category.id;
+export async function mockCategory(overrides: Partial<Category> = {}) {
+  let createdBy = overrides.createdBy;
+  if (!createdBy) {
+    const user = await mockUser();
+    createdBy = user.id;
   }
   const data = {
-    createdBy: userId,
-    categoryId: catId,
+    name: faker.random.alpha(8),
+    ...overrides,
+    createdBy,
+  };
+
+  return await prisma.category.create({ data });
+}
+
+export async function mockProduct(overrides: Partial<Product> = {}) {
+  let createdBy = overrides.createdBy;
+  if (!createdBy) {
+    const user = await mockUser();
+    createdBy = user.id;
+  }
+
+  let categoryId = overrides.categoryId;
+  if (!categoryId) {
+    const category = await mockCategory({ createdBy });
+    categoryId = category.id;
+  }
+
+  const data = {
     name: faker.random.alpha(8),
     description: faker.lorem.lines(2),
     image: faker.internet.url(),
     ...overrides,
+    createdBy,
+    categoryId,
   };
 
-  return await fastify.db.product.create({ data });
+  return await prisma.product.create({ data });
+}
+
+export async function mockList(overrides: Partial<List> = {}) {
+  let createdBy = overrides.createdBy;
+  if (!createdBy) {
+    const user = await mockUser();
+    createdBy = user.id;
+  }
+
+  const data = {
+    name: faker.random.alpha(8),
+    ...overrides,
+    createdBy,
+  };
+
+  return await prisma.list.create({ data });
 }

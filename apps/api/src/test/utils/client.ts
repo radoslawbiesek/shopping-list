@@ -16,7 +16,7 @@ export function createClient(fastify: FastifyInstance) {
 export async function createAuthenticatedClient(fastify: FastifyInstance, user?: User) {
   let mockedUser: User;
   if (!user) {
-    mockedUser = await mockUser(fastify);
+    mockedUser = await mockUser();
   } else {
     mockedUser = user;
   }

@@ -9,6 +9,7 @@ const productSchema = Type.Object({
   lastUsed: Type.Union([Type.Null(), Type.String({ format: 'date-time' })]),
   createdAt: Type.String({ format: 'date-time' }),
   updatedAt: Type.String({ format: 'date-time' }),
+  createdBy: Type.Number(),
 });
 
 export const createProductSchema = {

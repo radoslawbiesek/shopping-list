@@ -7,15 +7,15 @@ import { mockCategory, mockUser, mockProduct } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;
-let user: User;
 let client;
+let user: User;
 let category: Category;
 
 beforeAll(async () => {
   fastify = await startServer();
-  user = await mockUser(fastify);
+  user = await mockUser();
   client = await createAuthenticatedClient(fastify, user);
-  category = await mockCategory(fastify, user.id);
+  category = await mockCategory({ createdBy: user.id });
 });
 
 afterEach(async () => {
@@ -170,7 +170,15 @@ describe.only('[Products] - /products', () => {
   describe('Get all [GET /products]', () => {
     it('lists all products', async () => {
       const names = ['test1', 'test2', 'test3'];
-      await Promise.all(names.map((name) => mockProduct(fastify, user.id, category.id, { name })));
+      await Promise.all(
+        names.map((name) =>
+          mockProduct({
+            name,
+            categoryId: category.id,
+            createdBy: user.id,
+          }),
+        ),
+      );
       const response = await client({
         method: 'GET',
         url: '/products',
@@ -183,12 +191,26 @@ describe.only('[Products] - /products', () => {
 
     it('lists only user products', async () => {
       const names = ['test1', 'test2', 'test3'];
-      await Promise.all(names.map((name) => mockProduct(fastify, user.id, category.id, { name })));
+      await Promise.all(
+        names.map((name) =>
+          mockProduct({
+            name,
+            categoryId: category.id,
+            createdBy: user.id,
+          }),
+        ),
+      );
 
-      const otherUser = await mockUser(fastify);
+      const otherUser = await mockUser();
       const otherNames = ['test4', 'test5'];
       await Promise.all(
-        otherNames.map((name) => mockProduct(fastify, otherUser.id, category.id, { name })),
+        otherNames.map((name) =>
+          mockProduct({
+            name,
+            categoryId: category.id,
+            createdBy: otherUser.id,
+          }),
+        ),
       );
 
       const response = await client({

@@ -19,6 +19,7 @@ model User {
   updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
   Category  Category[]
   Product   Product[]
+  List      List[]
 }
 
 model Category {
@@ -46,4 +47,13 @@ model Product {
   lastUsed    DateTime? @db.Timestamptz(6)
   createdAt   DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt() @db.Timestamptz(6)
+}
+
+model List {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdBy Int
+  user      User     @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt() @db.Timestamptz(6)
 }

@@ -1,4 +1,4 @@
-import { FastifyInstance, InjectOptions } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { faker } from '@faker-js/faker';
 
 import { startServer } from '../server';
