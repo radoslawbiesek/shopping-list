@@ -62,13 +62,13 @@ describe.only('[Lists] - /lists', () => {
           method: 'POST',
           url: '/lists',
           payload: {
-            name: faker.random.alpha(3),
+            name: '',
           },
         });
 
         expect(response.statusCode).toBe(400);
         expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have fewer than 4 characters"`,
+          `"body/name must NOT have fewer than 1 characters"`,
         );
       });
 

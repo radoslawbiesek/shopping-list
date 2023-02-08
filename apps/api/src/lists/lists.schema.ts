@@ -10,7 +10,7 @@ const listSchema = Type.Object({
 
 export const createListSchema = {
   body: Type.Object({
-    name: Type.String({ minLength: 4, maxLength: 25 }),
+    name: Type.String({ minLength: 1, maxLength: 25 }),
   }),
   response: {
     200: listSchema,

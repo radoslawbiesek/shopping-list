@@ -11,7 +11,7 @@ const categorySchema = Type.Object({
 
 export const createCategorySchema = {
   body: Type.Object({
-    name: Type.String({ minLength: 4, maxLength: 25 }),
+    name: Type.String({ minLength: 1, maxLength: 25 }),
     parentId: Type.Optional(Type.Integer()),
   }),
   response: {

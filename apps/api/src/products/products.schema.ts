@@ -14,7 +14,7 @@ const productSchema = Type.Object({
 
 export const createProductSchema = {
   body: Type.Object({
-    name: Type.String({ minLength: 4, maxLength: 25 }),
+    name: Type.String({ minLength: 1, maxLength: 25 }),
     description: Type.Optional(Type.String({ maxLength: 120 })),
     image: Type.Optional(Type.String({ format: 'uri' })),
     categoryId: Type.Integer(),
