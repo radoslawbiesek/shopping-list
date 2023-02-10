@@ -3,7 +3,16 @@ import { faker } from '@faker-js/faker';
 import { List, ListItem, Product, User } from '@prisma/client';
 
 import { startServer } from '../server';
-import { mockUser, mockProduct, mockList, mockListItem, clearMockedListItems } from './utils/mock';
+import {
+  mockUser,
+  mockProduct,
+  mockList,
+  mockListItem,
+  clearMockedListItems,
+  clearMockedProducts,
+  clearMockedCategories,
+  clearMockedLists,
+} from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;

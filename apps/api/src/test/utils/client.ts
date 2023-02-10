@@ -26,7 +26,7 @@ export async function createAuthenticatedClient(fastify: FastifyInstance, user?:
   return async function (options: InjectOptions) {
     return fastify.inject(_.merge({}, authHeaders, options)).then((res) => ({
       ...res,
-      body: JSON.parse(res.body),
+      body: res.body ? JSON.parse(res.body) : null,
     }));
   };
 }

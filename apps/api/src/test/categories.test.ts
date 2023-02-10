@@ -3,7 +3,13 @@ import { faker } from '@faker-js/faker';
 import { Category, User } from '@prisma/client';
 
 import { startServer } from '../server';
-import { clearMockedCategories, mockCategory, mockUser } from './utils/mock';
+import {
+  clearMockedCategories,
+  clearMockedProducts,
+  mockCategory,
+  mockProduct,
+  mockUser,
+} from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;
@@ -17,6 +23,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
+  await clearMockedProducts();
   await clearMockedCategories();
 });
 
@@ -40,6 +47,18 @@ describe.only('[Categories] - /categories', () => {
         );
       },
     );
+
+    it.each([['DELETE']])('%s request requires authentication', async (method: 'DELETE') => {
+      const client = createClient(fastify);
+      const response = await client({
+        method,
+        url: `/categories/${faker.datatype.number()}`,
+      });
+      expect(response.statusCode).toBe(401);
+      expect(response.body.message).toMatchInlineSnapshot(
+        `"No Authorization was found in request.headers"`,
+      );
+    });
   });
 
   describe('Create [POST /categories]', () => {
@@ -184,6 +203,47 @@ describe.only('[Categories] - /categories', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.length).toBe(3);
       expect(response.body.map((c: Category) => c.name)).toEqual(expect.arrayContaining(names));
+    });
+  });
+
+  describe('Delete [DELETE /categories/:id', () => {
+    it('prevents category deletion if it contains products', async () => {
+      const category = await mockCategory({ createdBy: user.id });
+      await mockProduct({ createdBy: user.id, categoryId: category.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `categories/${category.id}`,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toMatchInlineSnapshot(
+        `"cannot delete category containing products"`,
+      );
+    });
+
+    it('prevents deletion of a category if it does not belong to the user', async () => {
+      const otherUser = await mockUser();
+      const category = await mockCategory({ createdBy: otherUser.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `categories/${category.id}`,
+      });
+
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toMatchInlineSnapshot(`"category not found"`);
+    });
+
+    it('deletes category', async () => {
+      const category = await mockCategory({ createdBy: user.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `categories/${category.id}`,
+      });
+
+      expect(response.statusCode).toBe(204);
     });
   });
 });

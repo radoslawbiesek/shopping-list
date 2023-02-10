@@ -3,7 +3,11 @@ import { FastifyPluginAsync } from 'fastify';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 
-import { createCategorySchema, getAllCategoriesSchema } from './categories.schema';
+import {
+  createCategorySchema,
+  deleteCategorySchema,
+  getAllCategoriesSchema,
+} from './categories.schema';
 
 const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -11,7 +15,6 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'POST',
     onRequest: [fastify.authenticate],
     schema: createCategorySchema,
-
     async handler(request) {
       try {
         const { name, parentId } = request.body;
@@ -26,10 +29,13 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
         return stringifyDates(category);
       } catch (error) {
         if (isPrismaError(error)) {
-          if (error.code === PrismaErrorCode.UniqueKeyViolation) {
-            throw fastify.httpErrors.badRequest('name must be unique');
-          } else if (error.code === PrismaErrorCode.ForeignKeyViolation) {
-            throw fastify.httpErrors.badRequest('parentId: category with given id does not exist');
+          switch (error.code) {
+            case PrismaErrorCode.UniqueKeyViolation:
+              throw fastify.httpErrors.badRequest('name must be unique');
+            case PrismaErrorCode.ForeignKeyViolation:
+              throw fastify.httpErrors.badRequest(
+                'parentId: category with given id does not exist',
+              );
           }
         }
 
@@ -49,6 +55,39 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
       });
 
       return categories.map(stringifyDates);
+    },
+  });
+
+  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+    url: '/categories/:id',
+    method: 'DELETE',
+    onRequest: [fastify.authenticate],
+    schema: deleteCategorySchema,
+    async handler(request, reply) {
+      try {
+        const category = await fastify.db.category.findFirst({
+          where: { id: request.params.id, createdBy: request.user.id },
+        });
+
+        if (!category) {
+          return fastify.httpErrors.notFound('category not found');
+        }
+
+        await fastify.db.category.delete({
+          where: { id: request.params.id },
+        });
+
+        return reply.status(204).send();
+      } catch (error) {
+        if (isPrismaError(error)) {
+          switch (error.code) {
+            case PrismaErrorCode.ForeignKeyViolation:
+              throw fastify.httpErrors.badRequest('cannot delete category containing products');
+          }
+        }
+
+        throw error;
+      }
     },
   });
 };

@@ -30,7 +30,7 @@ model Category {
   parent    Category?  @relation("Subcategory", fields: [parentId], references: [id])
   children  Category[] @relation("Subcategory")
   createdBy Int
-  user      User       @relation(fields: [createdBy], references: [id])
+  user      User       @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
   Product   Product[]
@@ -44,7 +44,7 @@ model Product {
   categoryId  Int
   category    Category   @relation(fields: [categoryId], references: [id])
   createdBy   Int
-  user        User       @relation(fields: [createdBy], references: [id])
+  user        User       @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   lastUsed    DateTime?  @db.Timestamptz(6)
   createdAt   DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime   @updatedAt() @db.Timestamptz(6)
@@ -55,7 +55,7 @@ model List {
   id        Int        @id @default(autoincrement())
   name      String
   createdBy Int
-  user      User       @relation(fields: [createdBy], references: [id])
+  user      User       @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
   ListItem  ListItem[]
@@ -71,7 +71,7 @@ model ListItem {
   isChecked  Boolean
   isPriority Boolean
   createdBy  Int
-  user       User     @relation(fields: [createdBy], references: [id])
+  user       User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime @updatedAt() @db.Timestamptz(6)
 }
