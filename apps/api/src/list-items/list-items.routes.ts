@@ -1,5 +1,7 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
+import { method } from 'lodash';
+import { deleteSchema } from '../common/common.schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 
 import { stringifyDates } from '../utils/format';
@@ -62,6 +64,25 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       });
 
       return listItems.map(stringifyDates);
+    },
+  });
+
+  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+    url: '/lists/:listId/items/:id',
+    method: 'DELETE',
+    schema: deleteSchema,
+    onRequest: [fastify.authenticate],
+    async handler(request, reply) {
+      const { id } = request.params;
+      const listItem = await fastify.db.listItem.findFirst({
+        where: { id, createdBy: request.user.id },
+      });
+      if (!listItem) {
+        return fastify.httpErrors.notFound('list item not found');
+      }
+
+      await fastify.db.listItem.delete({ where: { id } });
+      reply.status(204).send();
     },
   });
 };
