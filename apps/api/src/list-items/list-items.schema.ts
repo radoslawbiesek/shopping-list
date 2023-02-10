@@ -24,7 +24,32 @@ export const createListItemSchema = {
     productId: Type.Integer(),
     isChecked: Type.Boolean({ default: false }),
     isPriority: Type.Boolean({ default: false }),
-    amount: Type.Integer({ default: 1 }),
+    amount: Type.Integer({ minimum: 0, default: 1 }),
+  }),
+  response: {
+    200: listItemSchema,
+  },
+};
+
+export const deleteListItemSchema = {
+  params: Type.Object({
+    listId: Type.Integer(),
+    id: Type.Integer(),
+  }),
+  response: {
+    204: Type.Never(),
+  },
+};
+
+export const updateListItemSchema = {
+  params: Type.Object({
+    listId: Type.Integer(),
+    id: Type.Integer(),
+  }),
+  body: Type.Object({
+    isChecked: Type.Optional(Type.Boolean()),
+    isPriority: Type.Optional(Type.Boolean()),
+    amount: Type.Optional(Type.Integer({ minimum: 0 })),
   }),
   response: {
     200: listItemSchema,

@@ -64,7 +64,7 @@ const productsRoutes: FastifyPluginAsync = async (fastify) => {
         });
 
         if (!product) {
-          return fastify.httpErrors.notFound('product not found');
+          throw fastify.httpErrors.notFound('product not found');
         }
 
         await fastify.db.product.delete({ where: { id } });
@@ -73,9 +73,11 @@ const productsRoutes: FastifyPluginAsync = async (fastify) => {
         if (isPrismaError(error)) {
           switch (error.code) {
             case PrismaErrorCode.ForeignKeyViolation:
-              return fastify.httpErrors.badRequest('cannot delete product used as a list item');
+              throw fastify.httpErrors.badRequest('cannot delete product used as a list item');
           }
         }
+
+        throw error;
       }
     },
   });

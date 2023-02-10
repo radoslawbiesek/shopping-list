@@ -48,7 +48,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       const list = await fastify.db.list.findFirst({ where: { id, createdBy: request.user.id } });
 
       if (!list) {
-        return fastify.httpErrors.notFound('list not found');
+        throw fastify.httpErrors.notFound('list not found');
       }
 
       await fastify.db.list.delete({ where: { id } });

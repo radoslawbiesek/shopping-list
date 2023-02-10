@@ -1,11 +1,14 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
-import { method } from 'lodash';
-import { deleteSchema } from '../common/common.schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 
 import { stringifyDates } from '../utils/format';
-import { createListItemSchema, getAllListItemsSchema } from './list-items.schema';
+import {
+  createListItemSchema,
+  deleteListItemSchema,
+  getAllListItemsSchema,
+  updateListItemSchema,
+} from './list-items.schema';
 
 const listsRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -70,7 +73,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:listId/items/:id',
     method: 'DELETE',
-    schema: deleteSchema,
+    schema: deleteListItemSchema,
     onRequest: [fastify.authenticate],
     async handler(request, reply) {
       const { id } = request.params;
@@ -78,11 +81,36 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
         where: { id, createdBy: request.user.id },
       });
       if (!listItem) {
-        return fastify.httpErrors.notFound('list item not found');
+        throw fastify.httpErrors.notFound('list item not found');
       }
 
       await fastify.db.listItem.delete({ where: { id } });
       reply.status(204).send();
+    },
+  });
+
+  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+    url: '/lists/:listId/items/:id',
+    method: 'PATCH',
+    schema: updateListItemSchema,
+    onRequest: [fastify.authenticate],
+    async handler(request) {
+      const { id } = request.params;
+      const listItem = await fastify.db.listItem.findFirst({
+        where: { id, createdBy: request.user.id },
+      });
+      if (!listItem) {
+        throw fastify.httpErrors.notFound('list item not found');
+      }
+
+      const { amount, isChecked, isPriority } = request.body;
+
+      const update = await fastify.db.listItem.update({
+        where: { id },
+        data: { amount, isChecked, isPriority },
+      });
+
+      return stringifyDates(update);
     },
   });
 };
