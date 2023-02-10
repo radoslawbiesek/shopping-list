@@ -24,12 +24,3 @@ export const getAllCategoriesSchema = {
     200: Type.Array(categorySchema),
   },
 };
-
-export const deleteCategorySchema = {
-  params: Type.Object({
-    id: Type.Integer(),
-  }),
-  response: {
-    204: Type.Never(),
-  },
-};

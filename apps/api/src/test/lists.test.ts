@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { List, User } from '@prisma/client';
 
 import { startServer } from '../server';
-import { mockUser, mockList, clearMockedLists, clearMockedUsers } from './utils/mock';
+import { mockUser, mockList, clearMockedLists, clearMockedUsers, mockListItem } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;
@@ -41,6 +41,18 @@ describe.only('[Lists] - /lists', () => {
         );
       },
     );
+
+    it.each([['DELETE']])('%s request requires authentication', async (method: 'DELETE') => {
+      const client = createClient(fastify);
+      const response = await client({
+        method,
+        url: `/lists/${faker.datatype.number()}`,
+      });
+      expect(response.statusCode).toBe(401);
+      expect(response.body.message).toMatchInlineSnapshot(
+        `"No Authorization was found in request.headers"`,
+      );
+    });
   });
 
   describe('Create [POST /lists]', () => {
@@ -136,6 +148,39 @@ describe.only('[Lists] - /lists', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.length).toBe(3);
       expect(response.body.map((l: List) => l.name)).toEqual(expect.arrayContaining(names));
+    });
+  });
+
+  describe('Delete [DELETE /lists/:id', () => {
+    it('prevents deletion of a list if it does not belong to the user', async () => {
+      const otherUser = await mockUser();
+      const list = await mockList({ createdBy: otherUser.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `lists/${list.id}`,
+      });
+
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toMatchInlineSnapshot(`"list not found"`);
+    });
+
+    it('deletes list and attached list items', async () => {
+      const list = await mockList({ createdBy: user.id });
+      const listItem = await mockListItem({ createdBy: user.id, listId: list.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `lists/${list.id}`,
+      });
+
+      expect(response.statusCode).toBe(204);
+
+      const foundList = await fastify.db.list.findUnique({ where: { id: list.id } });
+      expect(foundList).toBe(null);
+
+      const foundListItem = await fastify.db.listItem.findUnique({ where: { id: listItem.id } });
+      expect(foundListItem).toBe(null);
     });
   });
 });

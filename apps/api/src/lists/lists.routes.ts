@@ -1,5 +1,6 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
+import { deleteSchema } from '../common/common.schema';
 
 import { stringifyDates } from '../utils/format';
 import { createListSchema, getAllListsSchema } from './lists.schema';
@@ -34,6 +35,24 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       });
 
       return lists.map(stringifyDates);
+    },
+  });
+
+  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+    url: '/lists/:id',
+    method: 'DELETE',
+    onRequest: [fastify.authenticate],
+    schema: deleteSchema,
+    async handler(request, reply) {
+      const { id } = request.params;
+      const list = await fastify.db.list.findFirst({ where: { id, createdBy: request.user.id } });
+
+      if (!list) {
+        return fastify.httpErrors.notFound('list not found');
+      }
+
+      await fastify.db.list.delete({ where: { id } });
+      reply.status(204).send();
     },
   });
 };

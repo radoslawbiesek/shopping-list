@@ -1,13 +1,10 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
+import { deleteSchema } from '../common/common.schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 
-import {
-  createCategorySchema,
-  deleteCategorySchema,
-  getAllCategoriesSchema,
-} from './categories.schema';
+import { createCategorySchema, getAllCategoriesSchema } from './categories.schema';
 
 const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -62,7 +59,7 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
     url: '/categories/:id',
     method: 'DELETE',
     onRequest: [fastify.authenticate],
-    schema: deleteCategorySchema,
+    schema: deleteSchema,
     async handler(request, reply) {
       try {
         const { id } = request.params;

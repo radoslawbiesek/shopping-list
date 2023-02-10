@@ -1,8 +1,9 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
+import { deleteSchema } from '../common/common.schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
-import { createProductSchema, deleteProductSchema, getAllProductsSchema } from './products.schema';
+import { createProductSchema, getAllProductsSchema } from './products.schema';
 
 const productsRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
@@ -54,7 +55,7 @@ const productsRoutes: FastifyPluginAsync = async (fastify) => {
     url: '/products/:id',
     method: 'DELETE',
     onRequest: [fastify.authenticate],
-    schema: deleteProductSchema,
+    schema: deleteSchema,
     async handler(request, reply) {
       try {
         const { id } = request.params;
