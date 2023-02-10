@@ -31,6 +31,7 @@ export async function startServer() {
   await fastify.register(import('./categories/categories.routes'));
   await fastify.register(import('./products/products.routes'));
   await fastify.register(import('./lists/lists.routes'));
+  await fastify.register(import('./list-items/list-items.routes'));
 
   await fastify.listen({ port: getEnvVariable('PORT') });
 

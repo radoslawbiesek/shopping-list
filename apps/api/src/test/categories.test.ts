@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { Category, User } from '@prisma/client';
 
 import { startServer } from '../server';
-import { mockCategory, mockUser } from './utils/mock';
+import { clearMockedCategories, mockCategory, mockUser } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;
@@ -17,7 +17,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  await fastify.db.category.deleteMany();
+  await clearMockedCategories();
 });
 
 afterAll(async () => {

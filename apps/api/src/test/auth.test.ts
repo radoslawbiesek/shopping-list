@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 
 import { startServer } from '../server';
 import { createClient } from './utils/client';
+import { clearMockedUsers } from './utils/mock';
 
 let fastify: FastifyInstance;
 let client;
@@ -17,7 +18,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await fastify.db.user.deleteMany();
+  await clearMockedUsers();
 });
 
 describe('[Auth] - /auth', () => {

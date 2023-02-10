@@ -20,6 +20,7 @@ model User {
   Category  Category[]
   Product   Product[]
   List      List[]
+  ListItem  ListItem[]
 }
 
 model Category {
@@ -36,24 +37,41 @@ model Category {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   description String?
   image       String?
   categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
+  category    Category   @relation(fields: [categoryId], references: [id])
   createdBy   Int
-  user        User      @relation(fields: [createdBy], references: [id])
-  lastUsed    DateTime? @db.Timestamptz(6)
-  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime  @updatedAt() @db.Timestamptz(6)
+  user        User       @relation(fields: [createdBy], references: [id])
+  lastUsed    DateTime?  @db.Timestamptz(6)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime   @updatedAt() @db.Timestamptz(6)
+  ListItem    ListItem[]
 }
 
 model List {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   name      String
   createdBy Int
-  user      User     @relation(fields: [createdBy], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt() @db.Timestamptz(6)
+  user      User       @relation(fields: [createdBy], references: [id])
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
+  ListItem  ListItem[]
+}
+
+model ListItem {
+  id         Int      @id @default(autoincrement())
+  listId     Int
+  list       List     @relation(fields: [listId], references: [id])
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  amount     Int
+  isChecked  Boolean
+  isPriority Boolean
+  createdBy  Int
+  user       User     @relation(fields: [createdBy], references: [id])
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt() @db.Timestamptz(6)
 }

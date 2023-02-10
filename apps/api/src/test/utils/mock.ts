@@ -1,7 +1,7 @@
-import { Category, PrismaClient, Product, User, List } from '@prisma/client';
+import { Category, PrismaClient, Product, User, List, ListItem } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 export async function mockUser(overrides: Partial<User> = {}) {
   const data = {
@@ -12,6 +12,10 @@ export async function mockUser(overrides: Partial<User> = {}) {
   };
 
   return await prisma.user.create({ data });
+}
+
+export async function clearMockedUsers() {
+  return await prisma.user.deleteMany();
 }
 
 export async function mockCategory(overrides: Partial<Category> = {}) {
@@ -27,6 +31,10 @@ export async function mockCategory(overrides: Partial<Category> = {}) {
   };
 
   return await prisma.category.create({ data });
+}
+
+export async function clearMockedCategories() {
+  return await prisma.category.deleteMany();
 }
 
 export async function mockProduct(overrides: Partial<Product> = {}) {
@@ -54,6 +62,10 @@ export async function mockProduct(overrides: Partial<Product> = {}) {
   return await prisma.product.create({ data });
 }
 
+export async function clearMockedProducts() {
+  return await prisma.product.deleteMany();
+}
+
 export async function mockList(overrides: Partial<List> = {}) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
@@ -68,4 +80,43 @@ export async function mockList(overrides: Partial<List> = {}) {
   };
 
   return await prisma.list.create({ data });
+}
+
+export async function clearMockedLists() {
+  return await prisma.list.deleteMany();
+}
+
+export async function mockListItem(overrides: Partial<ListItem> = {}) {
+  let createdBy = overrides.createdBy;
+  if (!createdBy) {
+    const user = await mockUser();
+    createdBy = user.id;
+  }
+
+  let listId = overrides.listId;
+  if (!listId) {
+    const list = await mockList({ createdBy });
+    listId = list.id;
+  }
+
+  let productId = overrides.productId;
+  if (!productId) {
+    const product = await mockProduct({ createdBy });
+    productId = product.id;
+  }
+
+  const data = {
+    createdBy,
+    listId,
+    productId,
+    isChecked: false,
+    isPriority: false,
+    amount: faker.datatype.number(),
+  };
+
+  return await prisma.listItem.create({ data });
+}
+
+export async function clearMockedListItems() {
+  return await prisma.listItem.deleteMany();
 }
