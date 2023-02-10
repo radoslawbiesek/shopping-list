@@ -13,12 +13,13 @@ beforeAll(async () => {
   client = createClient(fastify);
 });
 
-afterAll(async () => {
-  await fastify.close();
-});
-
 afterEach(async () => {
   await clearMockedUsers();
+});
+
+afterAll(async () => {
+  await clearMockedUsers();
+  await fastify.close();
 });
 
 describe('[Auth] - /auth', () => {

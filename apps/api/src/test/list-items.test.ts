@@ -9,9 +9,7 @@ import {
   mockList,
   mockListItem,
   clearMockedListItems,
-  clearMockedProducts,
-  clearMockedCategories,
-  clearMockedLists,
+  clearMockedUsers,
 } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
@@ -34,6 +32,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
+  await clearMockedUsers();
   await fastify.close();
 });
 

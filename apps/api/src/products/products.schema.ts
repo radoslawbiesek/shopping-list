@@ -29,3 +29,12 @@ export const getAllProductsSchema = {
     200: Type.Array(productSchema),
   },
 };
+
+export const deleteProductSchema = {
+  params: Type.Object({
+    id: Type.Integer(),
+  }),
+  response: {
+    204: Type.Never(),
+  },
+};

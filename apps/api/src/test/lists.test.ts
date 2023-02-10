@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { List, User } from '@prisma/client';
 
 import { startServer } from '../server';
-import { mockUser, mockList, clearMockedLists } from './utils/mock';
+import { mockUser, mockList, clearMockedLists, clearMockedUsers } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
 let fastify: FastifyInstance;
@@ -21,6 +21,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
+  await clearMockedUsers();
   await fastify.close();
 });
 

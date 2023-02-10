@@ -6,6 +6,7 @@ import { startServer } from '../server';
 import {
   clearMockedCategories,
   clearMockedProducts,
+  clearMockedUsers,
   mockCategory,
   mockProduct,
   mockUser,
@@ -28,6 +29,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
+  await clearMockedUsers();
   await fastify.close();
 });
 
@@ -244,6 +246,9 @@ describe.only('[Categories] - /categories', () => {
       });
 
       expect(response.statusCode).toBe(204);
+
+      const found = await fastify.db.category.findUnique({ where: { id: category.id } });
+      expect(found).toBe(null);
     });
   });
 });

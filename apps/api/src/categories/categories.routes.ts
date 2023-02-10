@@ -65,17 +65,16 @@ const categoriesRoutes: FastifyPluginAsync = async (fastify) => {
     schema: deleteCategorySchema,
     async handler(request, reply) {
       try {
+        const { id } = request.params;
         const category = await fastify.db.category.findFirst({
-          where: { id: request.params.id, createdBy: request.user.id },
+          where: { id, createdBy: request.user.id },
         });
 
         if (!category) {
           return fastify.httpErrors.notFound('category not found');
         }
 
-        await fastify.db.category.delete({
-          where: { id: request.params.id },
-        });
+        await fastify.db.category.delete({ where: { id } });
 
         return reply.status(204).send();
       } catch (error) {

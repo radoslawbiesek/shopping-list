@@ -1,14 +1,16 @@
 import { FastifyInstance } from 'fastify';
 import { faker } from '@faker-js/faker';
-import { Category, Product, User } from '@prisma/client';
+import { Category, prisma, Product, User } from '@prisma/client';
 
 import { startServer } from '../server';
 import {
   mockCategory,
   mockUser,
   mockProduct,
+  mockListItem,
   clearMockedProducts,
-  clearMockedCategories,
+  clearMockedUsers,
+  clearMockedListItems,
 } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
@@ -25,10 +27,12 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
+  await clearMockedListItems();
   await clearMockedProducts();
 });
 
 afterAll(async () => {
+  await clearMockedUsers();
   await fastify.close();
 });
 
@@ -48,6 +52,18 @@ describe.only('[Products] - /products', () => {
         );
       },
     );
+
+    it.each([['DELETE']])('%s request requires authentication', async (method: 'DELETE') => {
+      const client = createClient(fastify);
+      const response = await client({
+        method,
+        url: `/products/${faker.datatype.number()}`,
+      });
+      expect(response.statusCode).toBe(401);
+      expect(response.body.message).toMatchInlineSnapshot(
+        `"No Authorization was found in request.headers"`,
+      );
+    });
   });
 
   describe('Create [POST /products]', () => {
@@ -227,6 +243,50 @@ describe.only('[Products] - /products', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.length).toBe(3);
       expect(response.body.map((p: Product) => p.name)).toEqual(expect.arrayContaining(names));
+    });
+  });
+
+  describe('Delete [DELETE /products/:id', () => {
+    it('prevents product deletion if used as a list item', async () => {
+      const product = await mockProduct({ createdBy: user.id });
+      await mockListItem({ createdBy: user.id, productId: product.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `products/${product.id}`,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toMatchInlineSnapshot(
+        `"cannot delete product used as a list item"`,
+      );
+    });
+
+    it('prevents deletion of a product if it does not belong to the user', async () => {
+      const otherUser = await mockUser();
+      const product = await mockProduct({ createdBy: otherUser.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `products/${product.id}`,
+      });
+
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toMatchInlineSnapshot(`"product not found"`);
+    });
+
+    it('deletes product', async () => {
+      const product = await mockProduct({ createdBy: user.id });
+
+      const response = await client({
+        method: 'DELETE',
+        url: `products/${product.id}`,
+      });
+
+      expect(response.statusCode).toBe(204);
+
+      const found = await fastify.db.product.findUnique({ where: { id: product.id } });
+      expect(found).toBe(null);
     });
   });
 });
