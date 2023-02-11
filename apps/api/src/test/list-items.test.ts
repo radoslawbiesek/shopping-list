@@ -36,6 +36,14 @@ afterAll(async () => {
   await fastify.close();
 });
 
+const getUrl = (listItemId?: number, listId?: number) => {
+  let url = `/lists/${listId ?? list.id}/items`;
+  if (listItemId) {
+    url += `/${listItemId}`;
+  }
+  return url;
+};
+
 describe('[List items] - /lists/:listId/items', () => {
   describe('authentication', () => {
     it.each([
@@ -47,7 +55,7 @@ describe('[List items] - /lists/:listId/items', () => {
       '%s request requires authentication',
       async (method: InjectOptions['method'], listItemId?: number) => {
         const client = createClient(fastify);
-        const url = `/lists/${list.id}/items${listItemId ? `/${listItemId}` : ''}`;
+        const url = getUrl(listItemId);
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
         expect(response.body.message).toMatchInlineSnapshot(
@@ -57,12 +65,55 @@ describe('[List items] - /lists/:listId/items', () => {
     );
   });
 
+  describe('listId validation', () => {
+    it.each([
+      ['GET', null],
+      ['POST', null],
+      ['DELETE', faker.datatype.number()],
+      ['PATCH', faker.datatype.number()],
+    ])(
+      'validates if the list exists for the %s request',
+      async (method: InjectOptions['method'], listItemId?: number) => {
+        const invalidListId = 0;
+        const url = getUrl(listItemId, invalidListId);
+        const payload = {
+          productId: product.id,
+        };
+        const response = await client({ method, url, payload });
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toMatchInlineSnapshot(`"list with given id does not exist"`);
+      },
+    );
+  });
+
+  describe('authorization', () => {
+    it.each([
+      ['GET', null],
+      ['POST', null],
+      ['DELETE', faker.datatype.number()],
+      ['PATCH', faker.datatype.number()],
+    ])(
+      'validates whether the user has access to the list for the %s request',
+      async (method: InjectOptions['method'], listItemId?: number) => {
+        const otherUser = await mockUser();
+        const client = await createAuthenticatedClient(fastify, otherUser);
+        const url = getUrl(listItemId);
+        const payload = {
+          productId: product.id,
+        };
+        const response = await client({ method, url, payload });
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toMatchInlineSnapshot(`"list with given id does not exist"`);
+      },
+    );
+  });
+
   describe('Create [POST /lists/:listId/items]', () => {
     describe('validation', () => {
       it('productId must be valid product id', async () => {
         const response = await client({
           method: 'POST',
-          url: `/lists/${list.id}/items`,
+          url: getUrl(),
           payload: {
             productId: faker.datatype.number(),
           },
@@ -77,7 +128,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('amount must be a positive integer', async () => {
         const response = await client({
           method: 'POST',
-          url: `/lists/${list.id}/items`,
+          url: getUrl(),
           payload: {
             productId: product.id,
             amount: -1,
@@ -91,7 +142,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('isPriority must be a boolean', async () => {
         const response = await client({
           method: 'POST',
-          url: `/lists/${list.id}/items`,
+          url: getUrl(),
           payload: {
             productId: product.id,
             isPriority: faker.datatype.string(),
@@ -105,7 +156,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('isChecked must be a boolean', async () => {
         const response = await client({
           method: 'POST',
-          url: `/lists/${list.id}/items`,
+          url: getUrl(),
           payload: {
             productId: product.id,
             isChecked: faker.datatype.string(),
@@ -124,7 +175,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'POST',
-        url: `/lists/${list.id}/items`,
+        url: getUrl(),
         payload: {
           productId: product.id,
           isPriority,
@@ -160,7 +211,7 @@ describe('[List items] - /lists/:listId/items', () => {
       );
       const response = await client({
         method: 'GET',
-        url: `/lists/${list.id}/items`,
+        url: getUrl(),
       });
 
       expect(response.statusCode).toBe(200);
@@ -178,7 +229,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'DELETE',
-        url: `lists/${list.id}/items/${listItem.id}`,
+        url: getUrl(listItem.id),
       });
 
       expect(response.statusCode).toBe(404);
@@ -190,7 +241,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'DELETE',
-        url: `lists/${list.id}/items/${listItem.id}`,
+        url: getUrl(listItem.id),
       });
 
       expect(response.statusCode).toBe(204);
@@ -207,7 +258,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'DELETE',
-        url: `lists/${list.id}/items/${listItem.id}`,
+        url: getUrl(listItem.id),
       });
 
       expect(response.statusCode).toBe(404);
@@ -219,7 +270,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'DELETE',
-        url: `lists/${list.id}/items/${listItem.id}`,
+        url: getUrl(listItem.id),
       });
 
       expect(response.statusCode).toBe(204);
@@ -234,7 +285,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('amount must be a positive integer', async () => {
         const response = await client({
           method: 'PATCH',
-          url: `/lists/${list.id}/items/${faker.datatype.number()}`,
+          url: getUrl(faker.datatype.number()),
           payload: {
             amount: -1,
           },
@@ -247,7 +298,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('isPriority must be a boolean', async () => {
         const response = await client({
           method: 'PATCH',
-          url: `/lists/${list.id}/items/${faker.datatype.number()}`,
+          url: getUrl(faker.datatype.number()),
           payload: {
             isPriority: faker.datatype.string(),
           },
@@ -260,7 +311,7 @@ describe('[List items] - /lists/:listId/items', () => {
       it('isChecked must be a boolean', async () => {
         const response = await client({
           method: 'PATCH',
-          url: `/lists/${list.id}/items/${faker.datatype.number()}`,
+          url: getUrl(faker.datatype.number()),
           payload: {
             isChecked: faker.datatype.string(),
           },
@@ -288,7 +339,7 @@ describe('[List items] - /lists/:listId/items', () => {
 
       const response = await client({
         method: 'PATCH',
-        url: `/lists/${list.id}/items/${listItem.id}`,
+        url: getUrl(listItem.id),
         payload: {
           ...updates,
         },

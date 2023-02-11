@@ -15,7 +15,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     const listAccess = await fastify.db.listAccess.findFirst({ where: { userId, listId } });
 
     if (!listAccess || (!readonly && listAccess?.access === 'READ')) {
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound('list with given id does not exist');
     }
   }
 
