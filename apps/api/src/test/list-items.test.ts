@@ -237,36 +237,7 @@ describe('[List items] - /lists/:listId/items', () => {
     });
 
     it('deletes list item', async () => {
-      const listItem = await mockListItem({ createdBy: user.id });
-
-      const response = await client({
-        method: 'DELETE',
-        url: getUrl(listItem.id),
-      });
-
-      expect(response.statusCode).toBe(204);
-
-      const foundListItem = await fastify.db.listItem.findUnique({ where: { id: listItem.id } });
-      expect(foundListItem).toBe(null);
-    });
-  });
-
-  describe('Delete [DELETE /lists/:listId/items/:id', () => {
-    it('prevents deletion of a list item if it does not belong to the user', async () => {
-      const otherUser = await mockUser();
-      const listItem = await mockListItem({ createdBy: otherUser.id });
-
-      const response = await client({
-        method: 'DELETE',
-        url: getUrl(listItem.id),
-      });
-
-      expect(response.statusCode).toBe(404);
-      expect(response.body.message).toMatchInlineSnapshot(`"list item not found"`);
-    });
-
-    it('deletes list item', async () => {
-      const listItem = await mockListItem({ createdBy: user.id });
+      const listItem = await mockListItem({ createdBy: user.id, listId: list.id });
 
       const response = await client({
         method: 'DELETE',

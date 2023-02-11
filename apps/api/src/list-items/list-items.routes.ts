@@ -86,9 +86,9 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       await validateAccess(request.user.id, request.params.listId);
     },
     async handler(request, reply) {
-      const { id } = request.params;
+      const { id, listId } = request.params;
       const listItem = await fastify.db.listItem.findFirst({
-        where: { id, createdBy: request.user.id },
+        where: { id, listId },
       });
       if (!listItem) {
         throw fastify.httpErrors.notFound('list item not found');
@@ -108,9 +108,9 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       await validateAccess(request.user.id, request.params.listId);
     },
     async handler(request) {
-      const { id } = request.params;
+      const { id, listId } = request.params;
       const listItem = await fastify.db.listItem.findFirst({
-        where: { id, createdBy: request.user.id },
+        where: { id, listId },
       });
       if (!listItem) {
         throw fastify.httpErrors.notFound('list item not found');
