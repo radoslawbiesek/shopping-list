@@ -47,14 +47,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       } catch (error: unknown) {
         if (isPrismaError(error)) {
           if (error.code === PrismaErrorCode.ForeignKeyViolation) {
-            const fieldName = error.meta.field_name as string;
-            if (fieldName.includes('productId')) {
-              throw fastify.httpErrors.badRequest(
-                'productId: product with given id does not exist',
-              );
-            } else if (fieldName.includes('listId')) {
-              throw fastify.httpErrors.badRequest('listId: list with given id does not exist');
-            }
+            throw fastify.httpErrors.badRequest('productId: product with given id does not exist');
           }
         }
 
