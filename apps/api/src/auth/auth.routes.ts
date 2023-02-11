@@ -4,7 +4,7 @@ import { stringifyDates } from '../utils/format';
 import * as bcrypt from 'bcrypt';
 
 import { loginSchema, meSchema, registerSchema } from './auth.schema';
-import { getEnvVariable } from '../config/config';
+import { config } from '../config';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
@@ -15,7 +15,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
     async handler(request) {
       try {
         const { name, email, password } = request.body;
-        const hashedPassword = await bcrypt.hash(password, getEnvVariable('BCRYPT_SALT_OR_ROUNDS'));
+        const hashedPassword = await bcrypt.hash(password, config.bcrypt.saltOrRounds);
         const user = await fastify.db.user.create({
           data: { name, email, password: hashedPassword },
         });

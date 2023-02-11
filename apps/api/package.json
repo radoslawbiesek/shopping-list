@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "npx nodemon",
     "db": "docker-compose up -d db",
-    "pretest": "docker-compose up -d test-db && npx prisma migrate dev",
+    "pretest": "docker-compose up -d test-db && dotenv -e .env.test -- npx prisma migrate dev",
     "test": "jest --run-in-band",
-    "posttest": "docker-compose stop test-db && docker-compose rm -f test-db"
+    "posttest": "docker-compose stop test-db && docker-compose rm -f test-db",
+    "studio": "dotenv -e .env.development -- npx prisma studio"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -28,6 +29,7 @@
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.18",
+    "dotenv-cli": "^7.0.0",
     "jest": "^29.4.1",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.20",

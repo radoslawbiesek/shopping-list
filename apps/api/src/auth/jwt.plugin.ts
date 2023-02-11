@@ -1,7 +1,7 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import FP from 'fastify-plugin';
 
-import { getEnvVariable } from '../config/config';
+import { config } from '../config';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -23,9 +23,9 @@ declare module '@fastify/jwt' {
 
 const jwtPlugin: FastifyPluginAsync = async (fastify) => {
   await fastify.register(import('@fastify/jwt'), {
-    secret: getEnvVariable('JWT_SECRET'),
+    secret: config.jwt.secret,
     sign: {
-      expiresIn: getEnvVariable('JWT_EXPIRES_IN'),
+      expiresIn: config.jwt.expiresIn,
     },
   });
 

@@ -1,11 +1,11 @@
 import Fastify from 'fastify';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 
-import { getEnvVariable } from './config/config';
+import { config } from './config';
 
 export async function startServer() {
   const fastify = Fastify({
-    logger: getEnvVariable('NODE_ENV') !== 'test',
+    logger: config.nodeEnv !== 'test',
   }).withTypeProvider<TypeBoxTypeProvider>();
 
   await fastify.register(import('@fastify/sensible'));
@@ -14,8 +14,8 @@ export async function startServer() {
     mode: 'dynamic',
     openapi: {
       info: {
-        title: `Shopping List API (${getEnvVariable('NODE_ENV')})`,
-        version: getEnvVariable('VERSION'),
+        title: `Shopping List API (${config.nodeEnv})`,
+        version: config.version,
       },
     },
   });
@@ -33,7 +33,7 @@ export async function startServer() {
   await fastify.register(import('./lists/lists.routes'));
   await fastify.register(import('./list-items/list-items.routes'));
 
-  await fastify.listen({ port: getEnvVariable('PORT') });
+  await fastify.listen({ port: config.port });
 
   return fastify;
 }
