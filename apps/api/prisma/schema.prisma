@@ -11,17 +11,18 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique
-  name       String       @unique
-  password   String
-  createdAt  DateTime     @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime     @updatedAt() @db.Timestamptz(6)
-  Category   Category[]
-  Product    Product[]
-  List       List[]
-  ListItem   ListItem[]
-  ListAccess ListAccess[]
+  id                  Int          @id @default(autoincrement())
+  email               String       @unique
+  name                String       @unique
+  password            String
+  createdAt           DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime     @updatedAt() @db.Timestamptz(6)
+  Category            Category[]
+  Product             Product[]
+  List                List[]
+  ListItem            ListItem[]
+  ListAccessUser      ListAccess[] @relation("ListAccessUser")
+  ListAccessCreatedBy ListAccess[] @relation("ListAccessCreatedBy")
 }
 
 model Category {
@@ -81,16 +82,17 @@ model ListItem {
 enum Access {
   OWNER
   READ_WRITE
-  READ
 }
 
 model ListAccess {
-  id        Int      @id @default(autoincrement())
-  listId    Int
-  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  access    Access
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt() @db.Timestamptz(6)
+  id            Int      @id @default(autoincrement())
+  listId        Int
+  list          List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  userId        Int
+  user          User     @relation("ListAccessUser", fields: [userId], references: [id], onDelete: Cascade)
+  access        Access
+  createdBy     Int
+  createdByUser User     @relation("ListAccessCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt() @db.Timestamptz(6)
 }

@@ -18,6 +18,11 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
       const listAccess = await fastify.db.listAccess.create({
         data: {
           access: 'OWNER',
+          createdByUser: {
+            connect: {
+              id,
+            },
+          },
           user: {
             connect: {
               id,

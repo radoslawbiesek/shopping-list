@@ -1,4 +1,13 @@
-import { Category, PrismaClient, Product, User, List, ListItem } from '@prisma/client';
+import {
+  Category,
+  PrismaClient,
+  Product,
+  User,
+  List,
+  ListItem,
+  ListAccess,
+  Access,
+} from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
 export const prisma = new PrismaClient();
@@ -82,6 +91,11 @@ export async function mockList(overrides: Partial<List> = {}) {
   const listAccess = await prisma.listAccess.create({
     data: {
       access: 'OWNER',
+      createdByUser: {
+        connect: {
+          id: createdBy,
+        },
+      },
       user: {
         connect: {
           id: createdBy,
@@ -135,4 +149,38 @@ export async function mockListItem(overrides: Partial<ListItem> = {}) {
 
 export async function clearMockedListItems() {
   return await prisma.listItem.deleteMany();
+}
+
+export async function mockListAccess(overrides: Partial<ListAccess>) {
+  let createdBy = overrides.createdBy;
+  if (!createdBy) {
+    const user = await mockUser();
+    createdBy = user.id;
+  }
+
+  let listId = overrides.listId;
+  if (!listId) {
+    const list = await mockList({ createdBy });
+    listId = list.id;
+  }
+
+  let userId = overrides.userId;
+  if (!userId) {
+    const user = await mockUser();
+    userId = user.id;
+  }
+
+  return await prisma.listAccess.create({
+    data: {
+      createdBy,
+      listId,
+      userId,
+      access: Access.READ_WRITE,
+      ...overrides,
+    },
+  });
+}
+
+export async function clearMockedListAccesses() {
+  return await prisma.listAccess.deleteMany();
 }

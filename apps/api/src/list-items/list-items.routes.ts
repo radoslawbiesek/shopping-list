@@ -14,7 +14,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
   async function validateAccess(userId: number, listId: number, readonly = false) {
     const listAccess = await fastify.db.listAccess.findFirst({ where: { userId, listId } });
 
-    if (!listAccess || (!readonly && listAccess?.access === 'READ')) {
+    if (!listAccess) {
       throw fastify.httpErrors.notFound('list with given id does not exist');
     }
   }
@@ -62,7 +62,7 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     schema: getAllListItemsSchema,
     onRequest: [fastify.authenticate],
     async preHandler(request) {
-      await validateAccess(request.user.id, request.params.listId, true);
+      await validateAccess(request.user.id, request.params.listId);
     },
     async handler(request) {
       const { listId } = request.params;
