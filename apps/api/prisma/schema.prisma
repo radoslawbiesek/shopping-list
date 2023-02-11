@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  name      String     @unique
-  password  String
-  createdAt DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
-  Category  Category[]
-  Product   Product[]
-  List      List[]
-  ListItem  ListItem[]
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  name       String       @unique
+  password   String
+  createdAt  DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime     @updatedAt() @db.Timestamptz(6)
+  Category   Category[]
+  Product    Product[]
+  List       List[]
+  ListItem   ListItem[]
+  ListAccess ListAccess[]
 }
 
 model Category {
@@ -52,13 +53,14 @@ model Product {
 }
 
 model List {
-  id        Int        @id @default(autoincrement())
-  name      String
-  createdBy Int
-  user      User       @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
-  ListItem  ListItem[]
+  id         Int          @id @default(autoincrement())
+  name       String
+  createdBy  Int
+  user       User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt  DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime     @updatedAt() @db.Timestamptz(6)
+  ListItem   ListItem[]
+  ListAccess ListAccess[]
 }
 
 model ListItem {
@@ -74,4 +76,21 @@ model ListItem {
   user       User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime @updatedAt() @db.Timestamptz(6)
+}
+
+enum Access {
+  OWNER
+  READ_WRITE
+  READ
+}
+
+model ListAccess {
+  id        Int      @id @default(autoincrement())
+  listId    Int
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  access    Access
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt() @db.Timestamptz(6)
 }

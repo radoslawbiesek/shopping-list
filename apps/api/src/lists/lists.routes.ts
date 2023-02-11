@@ -12,13 +12,27 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     onRequest: [fastify.authenticate],
     schema: createListSchema,
     async handler(request) {
+      const { id } = request.user;
       const { name } = request.body;
-      const list = await fastify.db.list.create({
+
+      const listAccess = await fastify.db.listAccess.create({
         data: {
-          name,
-          createdBy: request.user.id,
+          access: 'OWNER',
+          user: {
+            connect: {
+              id,
+            },
+          },
+          list: {
+            create: {
+              name,
+              createdBy: id,
+            },
+          },
         },
       });
+
+      const list = await fastify.db.list.findUnique({ where: { id: listAccess.listId } });
 
       return stringifyDates(list);
     },

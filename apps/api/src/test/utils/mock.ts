@@ -79,7 +79,23 @@ export async function mockList(overrides: Partial<List> = {}) {
     createdBy,
   };
 
-  return await prisma.list.create({ data });
+  const listAccess = await prisma.listAccess.create({
+    data: {
+      access: 'OWNER',
+      user: {
+        connect: {
+          id: createdBy,
+        },
+      },
+      list: {
+        create: data,
+      },
+    },
+  });
+
+  const list = await prisma.list.findUnique({ where: { id: listAccess.listId } });
+
+  return list;
 }
 
 export async function clearMockedLists() {

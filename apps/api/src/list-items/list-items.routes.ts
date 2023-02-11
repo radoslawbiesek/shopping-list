@@ -11,11 +11,22 @@ import {
 } from './list-items.schema';
 
 const listsRoutes: FastifyPluginAsync = async (fastify) => {
+  async function validateAccess(userId: number, listId: number, readonly = false) {
+    const listAccess = await fastify.db.listAccess.findFirst({ where: { userId, listId } });
+
+    if (!listAccess || (!readonly && listAccess?.access === 'READ')) {
+      throw fastify.httpErrors.notFound();
+    }
+  }
+
   fastify.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:listId/items',
     method: 'POST',
     schema: createListItemSchema,
     onRequest: [fastify.authenticate],
+    async preHandler(request) {
+      await validateAccess(request.user.id, request.params.listId);
+    },
     async handler(request) {
       try {
         const { listId } = request.params;
@@ -57,6 +68,9 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'GET',
     schema: getAllListItemsSchema,
     onRequest: [fastify.authenticate],
+    async preHandler(request) {
+      await validateAccess(request.user.id, request.params.listId, true);
+    },
     async handler(request) {
       const { listId } = request.params;
       const listItems = await fastify.db.listItem.findMany({
@@ -75,6 +89,9 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'DELETE',
     schema: deleteListItemSchema,
     onRequest: [fastify.authenticate],
+    async preHandler(request) {
+      await validateAccess(request.user.id, request.params.listId);
+    },
     async handler(request, reply) {
       const { id } = request.params;
       const listItem = await fastify.db.listItem.findFirst({
@@ -94,6 +111,9 @@ const listsRoutes: FastifyPluginAsync = async (fastify) => {
     method: 'PATCH',
     schema: updateListItemSchema,
     onRequest: [fastify.authenticate],
+    async preHandler(request) {
+      await validateAccess(request.user.id, request.params.listId);
+    },
     async handler(request) {
       const { id } = request.params;
       const listItem = await fastify.db.listItem.findFirst({

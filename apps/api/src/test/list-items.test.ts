@@ -71,21 +71,6 @@ describe('[List items] - /lists/:listId/items', () => {
 
   describe('Create [POST /lists/:listId/items]', () => {
     describe('validation', () => {
-      it('listId param must be valid list id', async () => {
-        const response = await client({
-          method: 'POST',
-          url: `/lists/${faker.datatype.number()}/items`,
-          payload: {
-            productId: product.id,
-          },
-        });
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"listId: list with given id does not exist"`,
-        );
-      });
-
       it('productId must be valid product id', async () => {
         const response = await client({
           method: 'POST',
