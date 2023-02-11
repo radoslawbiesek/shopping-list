@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, HTTPMethods, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { List, ListItem, Product, User } from '@prisma/client';
 
@@ -38,29 +38,17 @@ afterAll(async () => {
 
 describe('[List items] - /lists/:listId/items', () => {
   describe('authentication', () => {
-    it.each([['GET'], ['POST']])(
+    it.each([
+      ['GET', null],
+      ['POST', null],
+      ['DELETE', faker.datatype.number()],
+      ['PATCH', faker.datatype.number()],
+    ])(
       '%s request requires authentication',
-      async (method: 'GET' | 'POST') => {
+      async (method: InjectOptions['method'], listItemId?: number) => {
         const client = createClient(fastify);
-        const response = await client({
-          method,
-          url: `/lists/${list.id}/items`,
-        });
-        expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
-      },
-    );
-
-    it.each([['DELETE', 'PATCH']])(
-      '%s request requires authentication',
-      async (method: 'DELETE' | 'PATCH') => {
-        const client = createClient(fastify);
-        const response = await client({
-          method,
-          url: `/lists/${faker.datatype.number()}/items/${faker.datatype.number()}}`,
-        });
+        const url = `/lists/${list.id}/items${listItemId ? `/${listItemId}` : ''}`;
+        const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
         expect(response.body.message).toMatchInlineSnapshot(
           `"No Authorization was found in request.headers"`,
