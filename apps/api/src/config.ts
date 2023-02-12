@@ -6,7 +6,7 @@ dotenv.config({ path: `.env.${process.env['NODE_ENV']}` });
 
 export const config = {
   nodeEnv: process.env['NODE_ENV'],
-  port: process.env['PORT'] ? parseInt(process.env['PORT']) : 3000,
+  port: process.env['PORT'] ? parseInt(process.env['PORT']) : 8000,
   db: {
     url: process.env['DATABASE_URL'],
   },
