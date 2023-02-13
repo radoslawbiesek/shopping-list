@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { Input } from '../../../components/input/Input';
-import { Button } from '../../../components/button/Button';
+import { Input } from '../input/Input';
+import { Button } from '../button/Button';
 
 export function LoginForm() {
   const defaultValues = {

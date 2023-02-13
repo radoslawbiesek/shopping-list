@@ -1,15 +1,15 @@
 import classNames from 'classnames';
 
-import { Size, Variant } from '../../types/styles';
+import { Size, Variant, WithClassName } from '../../types/styles';
 
-type ButtonProps = React.ComponentProps<'button'> & {
-  variant?: Variant;
-  size?: Size;
-  fullWidth?: boolean;
-  outline?: boolean;
-  loading?: boolean;
-  className?: string;
-};
+type ButtonProps = React.ComponentProps<'button'> &
+  WithClassName<{
+    variant?: Variant;
+    size?: Size;
+    fullWidth?: boolean;
+    outline?: boolean;
+    loading?: boolean;
+  }>;
 
 export function Button({
   variant,

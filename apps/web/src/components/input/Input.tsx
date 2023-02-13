@@ -1,16 +1,16 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-import { Size, Variant } from '../../types/styles';
+import { Size, Variant, WithClassName } from '../../types/styles';
 
-type InputProps = React.ComponentPropsWithRef<'input'> & {
-  label: string;
-  errorMessage?: string;
-  bordered?: boolean;
-  variant?: Variant;
-  size?: Size;
-  className?: string;
-};
+type InputProps = React.ComponentPropsWithRef<'input'> &
+  WithClassName<{
+    label: string;
+    errorMessage?: string;
+    bordered?: boolean;
+    variant?: Variant;
+    size?: Size;
+  }>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ name, label, bordered, errorMessage, className, ...rest }, ref) => {
