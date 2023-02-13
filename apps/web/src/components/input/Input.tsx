@@ -2,6 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 
 import { Size, Variant, WithClassName } from '../../types/styles';
+import { ErrorMessage } from '../error-message';
 
 type InputProps = React.ComponentPropsWithRef<'input'> &
   WithClassName<{
@@ -33,7 +34,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...rest}
         />
-        {errorMessage && <p className="my-1 text-sm text-red-700">{errorMessage}</p>}
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </div>
     );
   },
