@@ -1,10 +1,12 @@
 'use client';
 
+import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { Input } from '../../../components/form/input/Input';
+import { Input } from '../../../components/input/Input';
+import { Button } from '../../../components/button/Button';
 
 export function LoginForm() {
   const defaultValues = {
@@ -29,7 +31,10 @@ export function LoginForm() {
     resolver: zodResolver(schema),
   });
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   const onSubmit = (data: typeof defaultValues) => {
+    setIsSubmitting(true);
     console.log(data);
   };
 
@@ -48,9 +53,15 @@ export function LoginForm() {
         type="password"
         errorMessage={errors.password?.message}
       />
-      <button className="mt-6 btn btn-primary btn-block" type="submit">
+      <Button
+        variant="primary"
+        fullWidth
+        loading={isSubmitting}
+        disabled={isSubmitting}
+        className="mt-6"
+      >
         Zaloguj się
-      </button>
+      </Button>
     </form>
   );
 }

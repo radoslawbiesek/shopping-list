@@ -2,9 +2,9 @@ import './globals.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html data-theme="lemonade">
+    <html data-theme="garden">
       <head />
-      <body className="h-screen w-screen bg-base-200 p-0 m-0">{children}</body>
+      <body className="h-screen w-screen p-0 m-0">{children}</body>
     </html>
   );
 }
