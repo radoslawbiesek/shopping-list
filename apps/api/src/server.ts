@@ -8,6 +8,8 @@ export async function startServer() {
     logger: config.nodeEnv !== 'test',
   }).withTypeProvider<TypeBoxTypeProvider>();
 
+  await fastify.register(import('@fastify/cors'), { origin: true });
+
   await fastify.register(import('@fastify/sensible'));
 
   await fastify.register(import('@fastify/swagger'), {

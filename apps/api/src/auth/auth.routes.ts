@@ -48,7 +48,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
         throw fastify.httpErrors.badRequest('no active account found with the given credentials');
       }
 
-      const token = await fastify.jwt.sign(user);
+      const token = await fastify.jwt.sign({ id: user.id, email: user.email });
 
       return { token };
     },
