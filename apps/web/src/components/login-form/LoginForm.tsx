@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
+
 import { ErrorOption, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { redirect } from 'next/navigation';
 
 import * as authService from '../../services/auth.service';
 import * as tokenService from '../../services/token.service';
@@ -14,6 +15,8 @@ import { Button } from '../button/Button';
 import { ErrorMessage } from '../error-message';
 
 export function LoginForm() {
+  const router = useRouter();
+
   const defaultValues = {
     email: '',
     password: '',
@@ -53,7 +56,7 @@ export function LoginForm() {
     try {
       const response = await authService.login(loginData);
       tokenService.setToken(response.data.token);
-      redirect('/');
+      router.push('/');
     } catch (error) {
       setRootError({ message: 'Podany email lub hasło są nieprawidłowe' });
     } finally {
