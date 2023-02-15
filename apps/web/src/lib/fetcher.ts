@@ -6,7 +6,10 @@ import { getToken } from '../services/token.service';
 export const fetcher = Fetcher.for<paths>();
 
 const addToken: Middleware = (url, init, next) => {
-  init.headers.append('Authorization', `Bearer ${getToken()}`);
+  const token = getToken();
+  if (token) {
+    init.headers.append('Authorization', `Bearer ${token}`);
+  }
   return next(url, init);
 };
 

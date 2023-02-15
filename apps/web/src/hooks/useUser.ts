@@ -1,10 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import * as authService from '../services/auth.service';
+import { deleteToken } from '../services/token.service';
+
+const queryKey = ['user'];
 
 export function useUser() {
-  const { data: userData, ...rest } = useQuery({
-    queryKey: ['user'],
+  const queryClient = useQueryClient();
+
+  const { data: user, ...rest } = useQuery({
+    queryKey,
     queryFn: async function () {
       try {
         const data = await authService.me({});
@@ -20,7 +25,19 @@ export function useUser() {
         throw error;
       }
     },
+    staleTime: Infinity,
   });
 
-  return { userData, ...rest };
+  const refetchUser = async () => {
+    await queryClient.refetchQueries({
+      queryKey,
+    });
+  };
+
+  const logout = () => {
+    deleteToken();
+    queryClient.setQueryData(queryKey, null);
+  };
+
+  return { user, refetchUser, logout, ...rest };
 }

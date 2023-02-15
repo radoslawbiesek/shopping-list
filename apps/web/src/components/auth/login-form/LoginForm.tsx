@@ -7,15 +7,17 @@ import { ErrorOption, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import * as authService from '../../services/auth.service';
-import * as tokenService from '../../services/token.service';
+import * as authService from '../../../services/auth.service';
+import * as tokenService from '../../../services/token.service';
 
-import { Input } from '../input/Input';
-import { Button } from '../button/Button';
-import { ErrorMessage } from '../error-message';
+import { Input } from '../../ui/input/Input';
+import { Button } from '../../ui/button/Button';
+import { ErrorMessage } from '../../error-message';
+import { useUser } from '../../../hooks/useUser';
 
 export function LoginForm() {
   const router = useRouter();
+  const { refetchUser } = useUser();
 
   const defaultValues = {
     email: '',
@@ -56,6 +58,7 @@ export function LoginForm() {
     try {
       const response = await authService.login(loginData);
       tokenService.setToken(response.data.token);
+      refetchUser();
       router.push('/');
     } catch (error) {
       setRootError({ message: 'Podany email lub hasło są nieprawidłowe' });

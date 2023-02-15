@@ -1,8 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 
-import { Size, Variant, WithClassName } from '../../types/styles';
-import { ErrorMessage } from '../error-message';
+import { Size, Variant, WithClassName } from '../../../types/styles';
+import { ErrorMessage } from '../../error-message';
 
 type InputProps = React.ComponentPropsWithRef<'input'> &
   WithClassName<{

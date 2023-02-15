@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { Size, Variant, WithClassName } from '../../types/styles';
+import { Size, Variant, WithClassName } from '../../../types/styles';
 
 type ButtonProps = React.ComponentProps<'button'> &
   WithClassName<{
