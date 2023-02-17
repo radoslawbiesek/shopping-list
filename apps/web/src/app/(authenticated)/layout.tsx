@@ -7,7 +7,7 @@ import { FullPageSpinner } from '../../components/ui/full-page-spinner/FullPageS
 import { useUser } from '../../hooks/useUser';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading, isRefetching, logout } = useUser();
+  const { user, isLoading, isRefetching } = useUser();
 
   if (isLoading || isRefetching) {
     return <FullPageSpinner />;
@@ -17,5 +17,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return redirect('/login');
   }
 
-  return children;
+  return <div className="container mx-auto h-screen w-screen">{children}</div>;
 }
