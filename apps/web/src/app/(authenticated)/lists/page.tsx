@@ -1,18 +1,15 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 import { Card } from '../../../components/ui/card/Card';
-import { FullPageSpinner } from '../../../components/ui/full-page-spinner/FullPageSpinner';
-import { useLists } from '../../../hooks/useLists';
+import * as listsService from '../../../services/lists.service';
 
-export default function Lists() {
-  const router = useRouter();
-  const { lists, isLoading, isRefetching } = useLists();
+async function getAllLists() {
+  const response = await listsService.getAll({});
+  return response.data;
+}
 
-  if (isLoading || isRefetching) {
-    return <FullPageSpinner />;
-  }
+export default async function Lists() {
+  const lists = await getAllLists();
 
   return (
     <div className=" flex flex-col items-center">
@@ -22,7 +19,7 @@ export default function Lists() {
         title="Dodaj nową listę"
         buttonLabel="&#x2b;"
         onClick={() => {
-          router.push('/lists/create');
+          redirect('/lists/create');
         }}
       />
       {lists?.map((list) => (
@@ -32,7 +29,7 @@ export default function Lists() {
           description={`Stworzona ${new Date(list.createdAt).toLocaleDateString('en-GB')}`}
           buttonLabel="&rarr;"
           onClick={() => {
-            router.push(`/lists/${list.id}`);
+            redirect(`/lists/${list.id}`);
           }}
         />
       ))}

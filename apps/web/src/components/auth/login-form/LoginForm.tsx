@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 import { ErrorOption, useForm } from 'react-hook-form';
@@ -13,8 +12,6 @@ import { Button } from '../../ui/button/Button';
 import { ErrorMessage } from '../../error-message';
 
 export function LoginForm() {
-  const router = useRouter();
-
   const defaultValues = {
     email: '',
     password: '',
@@ -52,8 +49,7 @@ export function LoginForm() {
   const onSubmit = async (loginData: typeof defaultValues) => {
     setIsSubmitting(true);
     try {
-      const response = await signIn('credentials', loginData);
-      console.log(response);
+      await signIn('credentials', { ...loginData, callbackUrl: '/' });
     } catch (error) {
       setRootError({ message: 'Podany email lub hasło są nieprawidłowe' });
     } finally {

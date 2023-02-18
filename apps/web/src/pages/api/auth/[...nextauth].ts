@@ -20,12 +20,22 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const { user } = response.data;
+        const { user, token: accessToken } = response.data;
 
-        return { ...user, id: String(user.id) };
+        return { ...user, id: String(user.id), accessToken };
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (typeof user === 'object' && user.hasOwnProperty('accessToken')) {
+        const { accessToken } = user as unknown as { accessToken: string };
+        token.accessToken = accessToken;
+      }
+
+      return token;
+    },
+  },
   pages: {
     signIn: '/login',
   },
