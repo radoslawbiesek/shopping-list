@@ -29,6 +29,7 @@ export const loginSchema = {
   response: {
     200: Type.Object({
       token: Type.String(),
+      user: userSchema,
     }),
   },
 };

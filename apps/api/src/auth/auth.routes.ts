@@ -50,7 +50,7 @@ const authRoutes: FastifyPluginAsync = async (fastify) => {
 
       const token = await fastify.jwt.sign({ id: user.id, email: user.email });
 
-      return { token };
+      return { token, user: stringifyDates(user) };
     },
   });
 

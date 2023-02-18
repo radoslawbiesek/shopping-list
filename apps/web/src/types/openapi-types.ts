@@ -51,6 +51,15 @@ export interface paths {
           content: {
             "application/json": {
               token: string;
+              user: {
+                email: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                id: number;
+              };
             };
           };
         };
