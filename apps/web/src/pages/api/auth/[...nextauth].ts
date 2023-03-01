@@ -35,6 +35,10 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
+    session({ session, token }) {
+      const { accessToken } = token;
+      return { ...session, accessToken };
+    },
   },
   pages: {
     signIn: '/login',

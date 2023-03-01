@@ -1,7 +1,6 @@
-import { redirect } from 'next/navigation';
+import * as listsService from '../../../services/lists.service';
 
 import { Card } from '../../../components/ui/card/Card';
-import * as listsService from '../../../services/lists.service';
 
 async function getAllLists() {
   const response = await listsService.getAll({});
@@ -14,23 +13,14 @@ export default async function Lists() {
   return (
     <div className=" flex flex-col items-center">
       <h1 className="font-semibold text-3xl my-4">Listy zakupów</h1>
-      <Card
-        className="my-2"
-        title="Dodaj nową listę"
-        buttonLabel="&#x2b;"
-        onClick={() => {
-          redirect('/lists/create');
-        }}
-      />
+      <Card className="my-2" title="Dodaj nową listę" buttonLabel="&#x2b;" href="/lists/create" />
       {lists?.map((list) => (
         <Card
           className="my-2"
           title={list.name}
           description={`Stworzona ${new Date(list.createdAt).toLocaleDateString('en-GB')}`}
           buttonLabel="&rarr;"
-          onClick={() => {
-            redirect(`/lists/${list.id}`);
-          }}
+          href={`/lists/${list.id}`}
         />
       ))}
     </div>
