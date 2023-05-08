@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 import * as listsService from '../../../services/lists.service';
-import { useLists } from '../../../hooks/useLists';
 
 import { Input } from '../../ui/input/Input';
 import { Button } from '../../ui/button/Button';
@@ -16,7 +15,6 @@ import { ErrorMessage } from '../../error-message';
 
 export function ListForm() {
   const router = useRouter();
-  const { refetchLists } = useLists();
 
   const defaultValues = {
     name: '',
