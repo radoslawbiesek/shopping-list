@@ -1,6 +1,6 @@
 import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
-import { Category, prisma, Product, User } from '@prisma/client';
+import { Category, Product, User } from '@prisma/client';
 
 import { startServer } from '../server';
 import {
