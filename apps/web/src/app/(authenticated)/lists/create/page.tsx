@@ -1,5 +1,3 @@
-'use client';
-
 import { ListForm } from '../../../../components/lists/list-form/ListForm';
 
 export default function CreateList() {

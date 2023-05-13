@@ -1,20 +1,13 @@
-'use client';
-
 import { redirect } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
-import { FullPageSpinner } from '../../components/ui/full-page-spinner/FullPageSpinner';
+import * as authService from '../../services/auth.service';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const { status } = useSession();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  try {
+    await authService.me();
 
-  if (status === 'loading') {
-    return <FullPageSpinner />;
-  }
-
-  if (status === 'unauthenticated') {
+    return <div className="container mx-auto h-screen w-screen">{children}</div>;
+  } catch {
     return redirect('/login');
   }
-
-  return <div className="container mx-auto h-screen w-screen">{children}</div>;
 }

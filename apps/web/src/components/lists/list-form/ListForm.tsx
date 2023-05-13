@@ -3,34 +3,34 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 
-import { ErrorOption, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import * as listsService from '../../../services/lists.service';
+import * as listsActions from '../../../actions/lists.actions';
 
 import { Input } from '../../ui/input/Input';
 import { Button } from '../../ui/button/Button';
 import { ErrorMessage } from '../../error-message';
 
+const defaultValues = {
+  name: '',
+};
+
+const schema = z.object({
+  name: z
+    .string()
+    .min(1, { message: 'Nazwa jest wymagana' })
+    .max(25, { message: 'Nazwa użytkownika nie może mieć więcej niż 25 znaków' }),
+});
+
 export function ListForm() {
   const router = useRouter();
-
-  const defaultValues = {
-    name: '',
-  };
-
-  const schema = z.object({
-    name: z
-      .string()
-      .min(1, { message: 'Nazwa jest wymagana' })
-      .max(25, { message: 'Nazwa użytkownika nie może mieć więcej niż 25 znaków' }),
-  });
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     clearErrors,
   } = useForm({
@@ -38,35 +38,17 @@ export function ListForm() {
     resolver: zodResolver(schema),
   });
 
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const setRootError = (error: ErrorOption) => {
-    setError('root', error);
-  };
-
-  const clearRootError = () => {
-    clearErrors('root');
-  };
-
   const onSubmit = async (listData: typeof defaultValues) => {
-    setIsSubmitting(true);
     try {
-      await listsService.create(listData);
+      await listsActions.create(listData);
       router.push('/lists');
     } catch (error) {
-      if (error instanceof listsService.create.Error) {
-        setRootError({ message: error.data.message });
-      } else {
-        console.error(error);
-        setRootError({ message: 'Coś poszło nie tak. Spróbuj ponownie później.' });
-      }
-    } finally {
-      setIsSubmitting(false);
+      setError('root', { message: 'Coś poszło nie tak. Spróbuj ponownie później.' });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onChange={clearRootError}>
+    <form onSubmit={handleSubmit(onSubmit)} onChange={() => clearErrors('root')}>
       <Input
         {...register('name')}
         label="Nazwa"

@@ -1,64 +1,58 @@
 'use client';
 
 import * as React from 'react';
-import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-import { ErrorOption, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+
+import * as authActions from '../../../actions/auth.actions';
 
 import { Input } from '../../ui/input/Input';
 import { Button } from '../../ui/button/Button';
 import { ErrorMessage } from '../../error-message';
 
-export function LoginForm() {
-  const defaultValues = {
-    email: '',
-    password: '',
-  };
+const defaultValues = {
+  email: '',
+  password: '',
+};
 
-  const schema = z.object({
-    email: z
-      .string()
-      .min(1, { message: 'Email jest wymagany' })
-      .email({ message: 'Email jest nieprawidłowy' }),
-    password: z.string().min(1, { message: 'Hasło jest wymagane' }),
-  });
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, { message: 'Email jest wymagany' })
+    .email({ message: 'Email jest nieprawidłowy' }),
+  password: z.string().min(1, { message: 'Hasło jest wymagane' }),
+});
+
+export function LoginForm() {
+  const [, startTransition] = React.useTransition();
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     clearErrors,
   } = useForm({
     defaultValues,
     resolver: zodResolver(schema),
   });
-
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const setRootError = (error: ErrorOption) => {
-    setError('root', error);
-  };
-
-  const clearRootError = () => {
-    clearErrors('root');
-  };
-
   const onSubmit = async (loginData: typeof defaultValues) => {
-    setIsSubmitting(true);
     try {
-      await signIn('credentials', { ...loginData, callbackUrl: '/' });
+      startTransition(async () => {
+        await authActions.login(loginData);
+        router.push('/');
+      });
     } catch (error) {
-      setRootError({ message: 'Podany email lub hasło są nieprawidłowe' });
-    } finally {
-      setIsSubmitting(false);
+      setError('root', { message: 'Podany email lub hasło są nieprawidłowe' });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onChange={clearRootError}>
+    <form onSubmit={handleSubmit(onSubmit)} onChange={() => clearErrors('root')}>
       <Input
         {...register('email')}
         label="Email"
