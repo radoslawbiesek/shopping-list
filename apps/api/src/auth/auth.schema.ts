@@ -1,6 +1,6 @@
 import { Type, Static } from '@sinclair/typebox';
 
-const userSchema = Type.Object({
+export const userSchema = Type.Object({
   email: Type.String(),
   name: Type.String(),
   createdAt: Type.String({ format: 'date-time' }),
@@ -8,34 +8,23 @@ const userSchema = Type.Object({
   id: Type.Number(),
 });
 
-export type UserSchema = Static<typeof userSchema>;
+export const registerRequestBodySchema = Type.Object({
+  email: Type.String({ format: 'email', maxLength: 50 }),
+  name: Type.String({ minLength: 4, maxLength: 25 }),
+  password: Type.String({ minLength: 8, maxLength: 16 }),
+});
 
-export const registerSchema = {
-  body: Type.Object({
-    email: Type.String({ format: 'email', maxLength: 50 }),
-    name: Type.String({ minLength: 4, maxLength: 25 }),
-    password: Type.String({ minLength: 8, maxLength: 16 }),
-  }),
-  response: {
-    200: userSchema,
-  },
-};
+export const loginRequestBodySchema = Type.Object({
+  email: Type.String(),
+  password: Type.String(),
+});
 
-export const loginSchema = {
-  body: Type.Object({
-    email: Type.String(),
-    password: Type.String(),
-  }),
-  response: {
-    200: Type.Object({
-      token: Type.String(),
-      user: userSchema,
-    }),
-  },
-};
+export const loginReplySchema = Type.Object({
+  token: Type.String(),
+  user: userSchema,
+});
 
-export const meSchema = {
-  response: {
-    200: userSchema,
-  },
-};
+export type User = Static<typeof userSchema>;
+export type RegisterRequestBody = Static<typeof registerRequestBodySchema>;
+export type LoginRequestBody = Static<typeof loginRequestBodySchema>;
+export type LoginReply = Static<typeof loginReplySchema>;
