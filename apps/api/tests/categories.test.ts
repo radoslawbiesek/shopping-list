@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { Category, User } from '@prisma/client';
 import { describe, test, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
-import { startServer } from '../server';
+import { startServer } from '../src/server';
 import {
   clearMockedCategories,
   clearMockedProducts,

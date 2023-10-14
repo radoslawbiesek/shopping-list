@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { Access, List, ListAccess, User } from '@prisma/client';
 import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
-import { startServer } from '../server';
+import { startServer } from '../src/server';
 import {
   mockUser,
   mockList,

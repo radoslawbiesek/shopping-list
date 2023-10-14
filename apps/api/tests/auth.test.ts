@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { describe, test, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
-import { startServer } from '../server';
+import { startServer } from '../src/server';
 import { createClient } from './utils/client';
 import { clearMockedUsers } from './utils/mock';
 

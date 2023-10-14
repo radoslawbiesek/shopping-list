@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { List, User } from '@prisma/client';
 import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
-import { startServer } from '../server';
+import { startServer } from '../src/server';
 import { mockUser, mockList, clearMockedLists, clearMockedUsers, mockListItem } from './utils/mock';
 import { createAuthenticatedClient, createClient } from './utils/client';
 
