@@ -10,10 +10,11 @@ import {
 } from './lists.schema';
 
 const listsRoutes: FastifyPluginAsync = async (app) => {
+  app.addHook('onRequest', app.authenticate);
+
   app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists',
     method: 'POST',
-    onRequest: [app.authenticate],
     schema: {
       body: createListRequestBodySchema,
       response: {
@@ -26,7 +27,6 @@ const listsRoutes: FastifyPluginAsync = async (app) => {
   app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists',
     method: 'GET',
-    onRequest: [app.authenticate],
     schema: {
       response: {
         200: getAllListsReplySchema,
@@ -38,7 +38,6 @@ const listsRoutes: FastifyPluginAsync = async (app) => {
   app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:id',
     method: 'DELETE',
-    onRequest: [app.authenticate],
     schema: {
       params: deleteParamsSchema,
       response: {

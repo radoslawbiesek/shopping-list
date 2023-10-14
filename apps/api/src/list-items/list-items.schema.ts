@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 
-const listItemSchema = Type.Object({
+export const listItemReplySchema = Type.Object({
   id: Type.Integer(),
   listId: Type.Integer(),
   productId: Type.Integer(),
@@ -12,53 +12,36 @@ const listItemSchema = Type.Object({
   createdBy: Type.Integer(),
 });
 
-const baseParams = {
-  params: Type.Object({
-    listId: Type.Integer(),
-  }),
-};
+export const getAllListItemsReplySchema = Type.Array(listItemReplySchema);
 
-export const createListItemSchema = {
-  ...baseParams,
-  body: Type.Object({
-    productId: Type.Integer(),
-    isChecked: Type.Boolean({ default: false }),
-    isPriority: Type.Boolean({ default: false }),
-    amount: Type.Integer({ minimum: 0, default: 1 }),
-  }),
-  response: {
-    200: listItemSchema,
-  },
-};
+export const listItemParamsSchema = Type.Object({
+  listId: Type.Integer(),
+});
 
-export const deleteListItemSchema = {
-  params: Type.Object({
-    listId: Type.Integer(),
-    id: Type.Integer(),
-  }),
-  response: {
-    204: Type.Never(),
-  },
-};
+export const createListItemRequestBodySchema = Type.Object({
+  productId: Type.Integer(),
+  isChecked: Type.Boolean({ default: false }),
+  isPriority: Type.Boolean({ default: false }),
+  amount: Type.Integer({ minimum: 0, default: 1 }),
+});
 
-export const updateListItemSchema = {
-  params: Type.Object({
-    listId: Type.Integer(),
-    id: Type.Integer(),
-  }),
-  body: Type.Object({
-    isChecked: Type.Optional(Type.Boolean()),
-    isPriority: Type.Optional(Type.Boolean()),
-    amount: Type.Optional(Type.Integer({ minimum: 0 })),
-  }),
-  response: {
-    200: listItemSchema,
-  },
-};
+export const deleteListItemParamsSchema = Type.Object({
+  listId: Type.Integer(),
+  id: Type.Integer(),
+});
 
-export const getAllListItemsSchema = {
-  ...baseParams,
-  response: {
-    200: Type.Array(listItemSchema),
-  },
-};
+export const updateListItemParamsSchema = deleteListItemParamsSchema;
+
+export const updateListItemRequestBodySchema = Type.Object({
+  isChecked: Type.Optional(Type.Boolean()),
+  isPriority: Type.Optional(Type.Boolean()),
+  amount: Type.Optional(Type.Integer({ minimum: 0 })),
+});
+
+export type ListItemParams = Static<typeof listItemParamsSchema>;
+export type CreateListItemRequestBody = Static<typeof createListItemRequestBodySchema>;
+export type ListItemReply = Static<typeof listItemReplySchema>;
+export type GetAllListItemsReply = Static<typeof getAllListItemsReplySchema>;
+export type DeleteListItemParams = Static<typeof deleteListItemParamsSchema>;
+export type UpdateListItemParams = Static<typeof updateListItemParamsSchema>;
+export type UpdateListItemRequestBody = Static<typeof updateListItemRequestBodySchema>;
