@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 
-const listSchema = Type.Object({
+export const listReplySchema = Type.Object({
   id: Type.Integer(),
   name: Type.String(),
   createdAt: Type.String({ format: 'date-time' }),
@@ -8,17 +8,12 @@ const listSchema = Type.Object({
   createdBy: Type.Integer(),
 });
 
-export const createListSchema = {
-  body: Type.Object({
-    name: Type.String({ minLength: 1, maxLength: 25 }),
-  }),
-  response: {
-    200: listSchema,
-  },
-};
+export const createListRequestBodySchema = Type.Object({
+  name: Type.String({ minLength: 1, maxLength: 25 }),
+});
 
-export const getAllListsSchema = {
-  response: {
-    200: Type.Array(listSchema),
-  },
-};
+export const getAllListsReplySchema = Type.Array(listReplySchema);
+
+export type CreateListRequestBody = Static<typeof createListRequestBodySchema>;
+export type ListReply = Static<typeof listReplySchema>;
+export type GetAllListsReply = Static<typeof getAllListsReplySchema>;
