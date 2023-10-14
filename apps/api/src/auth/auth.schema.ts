@@ -1,6 +1,6 @@
 import { Type, Static } from '@sinclair/typebox';
 
-export const userSchema = Type.Object({
+export const userReplySchema = Type.Object({
   email: Type.String(),
   name: Type.String(),
   createdAt: Type.String({ format: 'date-time' }),
@@ -21,10 +21,10 @@ export const loginRequestBodySchema = Type.Object({
 
 export const loginReplySchema = Type.Object({
   token: Type.String(),
-  user: userSchema,
+  user: userReplySchema,
 });
 
-export type User = Static<typeof userSchema>;
+export type UserReply = Static<typeof userReplySchema>;
 export type RegisterRequestBody = Static<typeof registerRequestBodySchema>;
 export type LoginRequestBody = Static<typeof loginRequestBodySchema>;
 export type LoginReply = Static<typeof loginReplySchema>;

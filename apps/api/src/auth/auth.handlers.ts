@@ -1,12 +1,12 @@
 import { RouteHandler } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
-import { RegisterRequestBody, User, LoginRequestBody, LoginReply } from './auth.schema';
+import { RegisterRequestBody, UserReply, LoginRequestBody, LoginReply } from './auth.schema';
 import { config } from '../config';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 
-export const registerHandler: RouteHandler<{ Body: RegisterRequestBody; Reply: User }> =
+export const registerHandler: RouteHandler<{ Body: RegisterRequestBody; Reply: UserReply }> =
   async function registerHandler(request) {
     try {
       const { name, email, password } = request.body;
@@ -44,7 +44,7 @@ export const loginHandler: RouteHandler<{ Body: LoginRequestBody; Reply: LoginRe
     return { token, user: stringifyDates(user) };
   };
 
-export const meHandler: RouteHandler<{ Reply: User }> = async function meHandler(request) {
+export const meHandler: RouteHandler<{ Reply: UserReply }> = async function meHandler(request) {
   const user = await this.db.user.findUnique({ where: { id: request.user.id } });
 
   return stringifyDates(user);

@@ -1,20 +1,13 @@
 import { RouteHandler } from 'fastify';
 
-import {
-  DeleteParams,
-  DeleteReply,
-} from '../common/common.schema';
+import { DeleteParams, DeleteReply } from '../common/common.schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
-import {
-  CreateCategoryRequestBody,
-  Category,
-  Categories,
-} from './categories.schema';
+import { CreateCategoryRequestBody, CategoryReply, AllCategoriesReply } from './categories.schema';
 
 export const createCategoryHandler: RouteHandler<{
   Body: CreateCategoryRequestBody;
-  Reply: Category;
+  Reply: CategoryReply;
 }> = async function createCategoryHandler(request) {
   try {
     const { name, parentId } = request.body;
@@ -41,7 +34,7 @@ export const createCategoryHandler: RouteHandler<{
   }
 };
 
-export const getAllCategoriesHandler: RouteHandler<{ Reply: Categories }> =
+export const getAllCategoriesHandler: RouteHandler<{ Reply: AllCategoriesReply }> =
   async function getAllCategoriesHandler(request) {
     const categories = await this.db.category.findMany({
       where: { createdBy: request.user.id },

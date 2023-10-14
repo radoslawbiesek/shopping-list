@@ -5,7 +5,7 @@ import {
   loginReplySchema,
   loginRequestBodySchema,
   registerRequestBodySchema,
-  userSchema,
+  userReplySchema,
 } from './auth.schema';
 import { loginHandler, meHandler, registerHandler } from './auth.handlers';
 
@@ -16,7 +16,7 @@ const authRoutes: FastifyPluginAsync = async (app) => {
     schema: {
       body: registerRequestBodySchema,
       response: {
-        200: userSchema,
+        200: userReplySchema,
       },
     },
     handler: registerHandler,
@@ -40,7 +40,7 @@ const authRoutes: FastifyPluginAsync = async (app) => {
     onRequest: [app.authenticate],
     schema: {
       response: {
-        200: userSchema,
+        200: userReplySchema,
       },
     },
     handler: meHandler,

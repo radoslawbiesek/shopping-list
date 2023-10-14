@@ -9,8 +9,8 @@ import {
 } from './categories.handlers';
 import {
   createCategoryRequestBodySchema,
-  categorySchema,
-  categoriesSchema,
+  categoryReplySchema,
+  allCategoriesReplySchema,
 } from './categories.schema';
 
 const categoriesRoutes: FastifyPluginAsync = async (app) => {
@@ -21,7 +21,7 @@ const categoriesRoutes: FastifyPluginAsync = async (app) => {
     schema: {
       body: createCategoryRequestBodySchema,
       response: {
-        200: categorySchema,
+        200: categoryReplySchema,
       },
     },
     handler: createCategoryHandler,
@@ -33,7 +33,7 @@ const categoriesRoutes: FastifyPluginAsync = async (app) => {
     onRequest: [app.authenticate],
     schema: {
       response: {
-        200: categoriesSchema,
+        200: allCategoriesReplySchema,
       },
     },
     handler: getAllCategoriesHandler,
