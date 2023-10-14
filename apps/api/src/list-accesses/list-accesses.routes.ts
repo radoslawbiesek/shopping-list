@@ -1,100 +1,61 @@
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { Access } from '@prisma/client';
 import { FastifyPluginAsync } from 'fastify';
-import { isPrismaError, PrismaErrorCode } from '../db/errors';
 
-import { stringifyDates } from '../utils/format';
+import { deleteReplySchema } from '../common/common.schema';
 import {
-  createListAccessSchema,
-  deleteListAccessSchema,
-  getAllListAccessesSchema,
+  createListAccessHandler,
+  deleteListAccessHandler,
+  getAllListAccessesHandler,
+  validateOwnershipPreHandler,
+} from './list-accesses.handlers';
+import {
+  createListAccessRequestBodySchema,
+  deleteListAccessParamsSchema,
+  getAllListAccessesReplySchema,
+  listAccessParamsSchema,
+  listAccessReplySchema,
 } from './list-accesses.schema';
 
-const listsRoutes: FastifyPluginAsync = async (fastify) => {
-  async function validateOwnership(userId: number, listId: number) {
-    const list = await fastify.db.list.findUnique({ where: { id: listId } });
+const listAccessesRoutes: FastifyPluginAsync = async (app) => {
+  app.addHook('onRequest', app.authenticate);
+  app.addHook('preHandler', validateOwnershipPreHandler);
 
-    if (!list) {
-      throw fastify.httpErrors.notFound('list with given id does not exist');
-    }
-
-    if (list.createdBy !== userId) {
-      throw fastify.httpErrors.forbidden('you do not have persmissions to perform this action');
-    }
-  }
-
-  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+  app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:listId/accesses',
     method: 'POST',
-    schema: createListAccessSchema,
-    onRequest: [fastify.authenticate],
-    async preHandler(request) {
-      await validateOwnership(request.user.id, request.params.listId);
+    schema: {
+      params: listAccessParamsSchema,
+      body: createListAccessRequestBodySchema,
+      response: {
+        200: listAccessReplySchema,
+      },
     },
-    async handler(request) {
-      try {
-        const { listId } = request.params;
-        const { userId } = request.body;
-
-        const listAccess = await fastify.db.listAccess.create({
-          data: {
-            listId,
-            userId,
-            access: Access.READ_WRITE,
-            createdBy: userId,
-          },
-        });
-
-        return stringifyDates(listAccess);
-      } catch (error: unknown) {
-        if (isPrismaError(error)) {
-          if (error.code === PrismaErrorCode.ForeignKeyViolation) {
-            throw fastify.httpErrors.badRequest('user with given id does not exist');
-          }
-        }
-
-        throw error;
-      }
-    },
+    handler: createListAccessHandler,
   });
 
-  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+  app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:listId/accesses',
     method: 'GET',
-    schema: getAllListAccessesSchema,
-    onRequest: [fastify.authenticate],
-    async preHandler(request) {
-      await validateOwnership(request.user.id, request.params.listId);
+    schema: {
+      params: listAccessParamsSchema,
+      response: {
+        200: getAllListAccessesReplySchema,
+      },
     },
-    async handler(request) {
-      const { listId } = request.params;
-      const listAccesses = await fastify.db.listAccess.findMany({
-        where: { listId },
-      });
-
-      return listAccesses.map(stringifyDates);
-    },
+    handler: getAllListAccessesHandler,
   });
 
-  fastify.withTypeProvider<TypeBoxTypeProvider>().route({
+  app.withTypeProvider<TypeBoxTypeProvider>().route({
     url: '/lists/:listId/accesses/:id',
     method: 'DELETE',
-    schema: deleteListAccessSchema,
-    onRequest: [fastify.authenticate],
-    async preHandler(request) {
-      await validateOwnership(request.user.id, request.params.listId);
+    schema: {
+      params: deleteListAccessParamsSchema,
+      response: {
+        204: deleteReplySchema,
+      },
     },
-    async handler(request, reply) {
-      const { id } = request.params;
-      const listAccess = await fastify.db.listAccess.findUnique({ where: { id } });
-      if (!listAccess) {
-        throw fastify.httpErrors.notFound('list access not found');
-      }
-
-      await fastify.db.listAccess.delete({ where: { id } });
-      reply.status(204).send();
-    },
+    handler: deleteListAccessHandler,
   });
 };
 
-export default listsRoutes;
+export default listAccessesRoutes;

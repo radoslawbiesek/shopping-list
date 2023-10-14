@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 
-const listAccessSchema = Type.Object({
+export const listAccessReplySchema = Type.Object({
   id: Type.Integer(),
   listId: Type.Integer(),
   userId: Type.Integer(),
@@ -9,33 +9,23 @@ const listAccessSchema = Type.Object({
   updatedAt: Type.String({ format: 'date-time' }),
 });
 
-const params = Type.Object({
+export const getAllListAccessesReplySchema = Type.Array(listAccessReplySchema);
+
+export const listAccessParamsSchema = Type.Object({
   listId: Type.Integer(),
 });
 
-export const createListAccessSchema = {
-  params,
-  body: Type.Object({
-    userId: Type.Integer(),
-  }),
-  response: {
-    200: listAccessSchema,
-  },
-};
+export const createListAccessRequestBodySchema = Type.Object({
+  userId: Type.Integer(),
+});
 
-export const getAllListAccessesSchema = {
-  params,
-  response: {
-    200: Type.Array(listAccessSchema),
-  },
-};
+export const deleteListAccessParamsSchema = Type.Object({
+  listId: Type.Integer(),
+  id: Type.Integer(),
+});
 
-export const deleteListAccessSchema = {
-  params: Type.Object({
-    listId: Type.Integer(),
-    id: Type.Integer(),
-  }),
-  response: {
-    204: Type.Never(),
-  },
-};
+export type ListAccessReply = Static<typeof listAccessReplySchema>;
+export type GetAllListAccessesReply = Static<typeof getAllListAccessesReplySchema>;
+export type ListAccessParams = Static<typeof listAccessParamsSchema>;
+export type CreateListAccessRequestBody = Static<typeof createListAccessRequestBodySchema>;
+export type DeleteListAccessParams = Static<typeof deleteListAccessParamsSchema>;
