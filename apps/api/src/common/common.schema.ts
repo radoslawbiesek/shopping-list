@@ -1,10 +1,17 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
+
+export const deleteParamsSchema = Type.Object({
+  id: Type.Integer(),
+});
+
+export const deleteReplySchema = Type.Never();
 
 export const deleteSchema = {
-  params: Type.Object({
-    id: Type.Integer(),
-  }),
+  params: deleteParamsSchema,
   response: {
-    204: Type.Never(),
+    204: deleteReplySchema,
   },
 };
+
+export type DeleteParams = Static<typeof deleteParamsSchema>;
+export type DeleteReply = Static<typeof deleteReplySchema>;

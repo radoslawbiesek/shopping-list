@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 
-const categorySchema = Type.Object({
+export const categorySchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
   parentId: Type.Union([Type.Null(), Type.Integer()]),
@@ -9,18 +9,13 @@ const categorySchema = Type.Object({
   createdBy: Type.Number(),
 });
 
-export const createCategorySchema = {
-  body: Type.Object({
-    name: Type.String({ minLength: 1, maxLength: 25 }),
-    parentId: Type.Optional(Type.Integer()),
-  }),
-  response: {
-    200: categorySchema,
-  },
-};
+export const categoriesSchema = Type.Array(categorySchema);
 
-export const getAllCategoriesSchema = {
-  response: {
-    200: Type.Array(categorySchema),
-  },
-};
+export const createCategoryRequestBodySchema = Type.Object({
+  name: Type.String({ minLength: 1, maxLength: 25 }),
+  parentId: Type.Optional(Type.Integer()),
+});
+
+export type Category = Static<typeof categorySchema>;
+export type Categories = Static<typeof categoriesSchema>;
+export type CreateCategoryRequestBody = Static<typeof createCategoryRequestBodySchema>;
