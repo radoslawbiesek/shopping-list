@@ -1,6 +1,7 @@
 import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { Category, User } from '@prisma/client';
+import { describe, test, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import {
@@ -33,9 +34,9 @@ afterAll(async () => {
   await fastify.close();
 });
 
-describe.only('[Categories] - /categories', () => {
+describe('[Categories] - /categories', () => {
   describe('authentication', () => {
-    it.each([
+    test.each([
       ['GET', null],
       ['POST', null],
       ['DELETE', faker.datatype.number()],
@@ -46,9 +47,7 @@ describe.only('[Categories] - /categories', () => {
         const url = `/categories${categoryId ? `/${categoryId}` : ''}`;
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
+        expect(response.body.message).toEqual('No Authorization was found in request.headers');
       },
     );
   });
@@ -56,7 +55,7 @@ describe.only('[Categories] - /categories', () => {
   describe('Create [POST /categories]', () => {
     describe('validation', () => {
       const name = faker.random.alpha(8);
-      it('name is required', async () => {
+      test('name is required', async () => {
         const response = await client({
           method: 'POST',
           url: '/categories',
@@ -64,12 +63,10 @@ describe.only('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'name'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'name'");
       });
 
-      it('name must be unique', async () => {
+      test('name must be unique', async () => {
         const category = await mockCategory({ createdBy: user.id });
         const response = await client({
           method: 'POST',
@@ -80,10 +77,10 @@ describe.only('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"name must be unique"`);
+        expect(response.body.message).toBe('name must be unique');
       });
 
-      it('name must not be too short', async () => {
+      test('name must not be too short', async () => {
         const response = await client({
           method: 'POST',
           url: '/categories',
@@ -93,12 +90,10 @@ describe.only('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have fewer than 1 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
       });
 
-      it('name must not be too long', async () => {
+      test('name must not be too long', async () => {
         const response = await client({
           method: 'POST',
           url: '/categories',
@@ -108,12 +103,10 @@ describe.only('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have more than 25 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
       });
 
-      it('parentId must be valid category id', async () => {
+      test('parentId must be valid category id', async () => {
         const response = await client({
           method: 'POST',
           url: '/categories',
@@ -124,13 +117,11 @@ describe.only('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"parentId: category with given id does not exist"`,
-        );
+        expect(response.body.message).toBe('parentId: category with given id does not exist');
       });
     });
 
-    it('creates category', async () => {
+    test('creates category', async () => {
       const name = faker.datatype.string();
       const response = await client({
         method: 'POST',
@@ -145,7 +136,7 @@ describe.only('[Categories] - /categories', () => {
       expect(response.body).toHaveProperty('id');
     });
 
-    it('creates subcategory', async () => {
+    test('creates subcategory', async () => {
       const parentCategory = await mockCategory({ createdBy: user.id });
       const parentId = parentCategory.id;
       const name = faker.datatype.string();
@@ -166,7 +157,7 @@ describe.only('[Categories] - /categories', () => {
   });
 
   describe('Get all [GET /categories]', () => {
-    it('lists all categories', async () => {
+    test('lists all categories', async () => {
       const names = ['test1', 'test2', 'test3'];
       await Promise.all(names.map((name) => mockCategory({ name, createdBy: user.id })));
       const response = await client({
@@ -179,7 +170,7 @@ describe.only('[Categories] - /categories', () => {
       expect(response.body.map((c: Category) => c.name)).toEqual(expect.arrayContaining(names));
     });
 
-    it('lists only user categories', async () => {
+    test('lists only user categories', async () => {
       const names = ['test1', 'test2', 'test3'];
       await Promise.all(names.map((name) => mockCategory({ name, createdBy: user.id })));
 
@@ -199,7 +190,7 @@ describe.only('[Categories] - /categories', () => {
   });
 
   describe('Delete [DELETE /categories/:id', () => {
-    it('prevents category deletion if it contains products', async () => {
+    test('prevents category deletion if it contains products', async () => {
       const category = await mockCategory({ createdBy: user.id });
       await mockProduct({ createdBy: user.id, categoryId: category.id });
 
@@ -209,12 +200,10 @@ describe.only('[Categories] - /categories', () => {
       });
 
       expect(response.statusCode).toBe(400);
-      expect(response.body.message).toMatchInlineSnapshot(
-        `"cannot delete category containing products"`,
-      );
+      expect(response.body.message).toBe('cannot delete category containing products');
     });
 
-    it('prevents deletion of a category if it does not belong to the user', async () => {
+    test('prevents deletion of a category if it does not belong to the user', async () => {
       const otherUser = await mockUser();
       const category = await mockCategory({ createdBy: otherUser.id });
 
@@ -224,10 +213,10 @@ describe.only('[Categories] - /categories', () => {
       });
 
       expect(response.statusCode).toBe(404);
-      expect(response.body.message).toMatchInlineSnapshot(`"category not found"`);
+      expect(response.body.message).toBe('category not found');
     });
 
-    it('deletes category', async () => {
+    test('deletes category', async () => {
       const category = await mockCategory({ createdBy: user.id });
 
       const response = await client({

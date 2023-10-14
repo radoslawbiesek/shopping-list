@@ -1,6 +1,7 @@
 import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { Category, Product, User } from '@prisma/client';
+import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import {
@@ -36,7 +37,7 @@ afterAll(async () => {
   await fastify.close();
 });
 
-describe.only('[Products] - /products', () => {
+describe('[Products] - /products', () => {
   describe('authentication', () => {
     it.each([
       ['GET', null],
@@ -49,9 +50,7 @@ describe.only('[Products] - /products', () => {
         const url = `/products${productId ? `/${productId}` : ''}`;
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
+        expect(response.body.message).toBe('No Authorization was found in request.headers');
       },
     );
   });
@@ -68,9 +67,7 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'name'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'name'");
       });
 
       it('name must not be too short', async () => {
@@ -84,9 +81,7 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have fewer than 1 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
       });
 
       it('name must not be too long', async () => {
@@ -100,9 +95,7 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have more than 25 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
       });
 
       it('categoryId must be valid category id', async () => {
@@ -116,9 +109,7 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"categoryId: category with given id does not exist"`,
-        );
+        expect(response.body.message).toBe('categoryId: category with given id does not exist');
       });
 
       it('description must not be too long', async () => {
@@ -133,8 +124,8 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/description must NOT have more than 120 characters"`,
+        expect(response.body.message).toBe(
+          'body/description must NOT have more than 120 characters',
         );
       });
 
@@ -150,7 +141,7 @@ describe.only('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/image must match format "uri""`);
+        expect(response.body.message).toBe('body/image must match format "uri"');
       });
     });
 
@@ -247,9 +238,7 @@ describe.only('[Products] - /products', () => {
       });
 
       expect(response.statusCode).toBe(400);
-      expect(response.body.message).toMatchInlineSnapshot(
-        `"cannot delete product used as a list item"`,
-      );
+      expect(response.body.message).toBe('cannot delete product used as a list item');
     });
 
     it('prevents deletion of a product if it does not belong to the user', async () => {
@@ -262,7 +251,7 @@ describe.only('[Products] - /products', () => {
       });
 
       expect(response.statusCode).toBe(404);
-      expect(response.body.message).toMatchInlineSnapshot(`"product not found"`);
+      expect(response.body.message).toBe('product not found');
     });
 
     it('deletes product', async () => {

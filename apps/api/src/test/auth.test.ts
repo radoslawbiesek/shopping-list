@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { faker } from '@faker-js/faker';
+import { describe, test, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import { createClient } from './utils/client';
@@ -24,7 +25,7 @@ afterAll(async () => {
 
 describe('[Auth] - /auth', () => {
   describe('Auth Flow', () => {
-    it('register, login and receiving user information', async () => {
+    test('register, login and receiving user information', async () => {
       const data = {
         email: faker.internet.email(),
         password: faker.internet.password(),
@@ -53,9 +54,7 @@ describe('[Auth] - /auth', () => {
         },
       });
       expect(loginError.statusCode).toBe(400);
-      expect(loginError.body.message).toMatchInlineSnapshot(
-        `"no active account found with the given credentials"`,
-      );
+      expect(loginError.body.message).toBe('no active account found with the given credentials');
 
       // Login
       const loginResponse = await client({
@@ -97,7 +96,7 @@ describe('[Auth] - /auth', () => {
       const shortName = 'a'.repeat(3);
       const longName = 'a'.repeat(26);
 
-      it('password is required', async () => {
+      test('password is required', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -107,12 +106,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'password'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'password'");
       });
 
-      it('password must not be too short', async () => {
+      test('password must not be too short', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -123,12 +120,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/password must NOT have fewer than 8 characters"`,
-        );
+        expect(response.body.message).toBe('body/password must NOT have fewer than 8 characters');
       });
 
-      it('password must not be too long', async () => {
+      test('password must not be too long', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -139,12 +134,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/password must NOT have more than 16 characters"`,
-        );
+        expect(response.body.message).toBe('body/password must NOT have more than 16 characters');
       });
 
-      it('email must be valid', async () => {
+      test('email must be valid', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -155,12 +148,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/email must match format "email""`,
-        );
+        expect(response.body.message).toBe('body/email must match format "email"');
       });
 
-      it('email must not be too long', async () => {
+      test('email must not be too long', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -171,12 +162,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/email must NOT have more than 50 characters"`,
-        );
+        expect(response.body.message).toBe('body/email must NOT have more than 50 characters');
       });
 
-      it('name is required', async () => {
+      test('name is required', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -186,12 +175,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'name'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'name'");
       });
 
-      it('name must not be too short', async () => {
+      test('name must not be too short', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -202,12 +189,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have fewer than 4 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have fewer than 4 characters');
       });
 
-      it('name must not be too long', async () => {
+      test('name must not be too long', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/register',
@@ -218,12 +203,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have more than 25 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
       });
 
-      it('email must be unique', async () => {
+      test('email must be unique', async () => {
         await fastify.db.user.create({
           data: {
             email,
@@ -241,10 +224,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"email is already taken"`);
+        expect(response.body.message).toBe('email is already taken');
       });
 
-      it('name must be unique', async () => {
+      test('name must be unique', async () => {
         await fastify.db.user.create({
           data: {
             email,
@@ -262,7 +245,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"name is already taken"`);
+        expect(response.body.message).toBe('name is already taken');
       });
     });
   });
@@ -272,7 +255,7 @@ describe('[Auth] - /auth', () => {
       const email = faker.internet.email();
       const password = faker.internet.password();
 
-      it('password is required', async () => {
+      test('password is required', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/login',
@@ -281,12 +264,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'password'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'password'");
       });
 
-      it('email is required', async () => {
+      test('email is required', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/login',
@@ -295,12 +276,10 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'email'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'email'");
       });
 
-      it('user must exist', async () => {
+      test('user must exist', async () => {
         const response = await client({
           method: 'POST',
           url: '/auth/login',
@@ -310,23 +289,19 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"no active account found with the given credentials"`,
-        );
+        expect(response.body.message).toBe('no active account found with the given credentials');
       });
     });
   });
 
   describe('Me [GET /auth/me]', () => {
-    it('token is required', async () => {
+    test('token is required', async () => {
       const response = await client({
         method: 'GET',
         url: '/auth/me',
       });
       expect(response.statusCode).toBe(401);
-      expect(response.body.message).toMatchInlineSnapshot(
-        `"No Authorization was found in request.headers"`,
-      );
+      expect(response.body.message).toBe('No Authorization was found in request.headers');
     });
   });
 });

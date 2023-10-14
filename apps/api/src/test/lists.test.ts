@@ -1,6 +1,7 @@
 import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { List, User } from '@prisma/client';
+import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import { mockUser, mockList, clearMockedLists, clearMockedUsers, mockListItem } from './utils/mock';
@@ -25,7 +26,7 @@ afterAll(async () => {
   await fastify.close();
 });
 
-describe.only('[Lists] - /lists', () => {
+describe('[Lists] - /lists', () => {
   describe('authentication', () => {
     it.each([
       ['GET', null],
@@ -38,9 +39,7 @@ describe.only('[Lists] - /lists', () => {
         const url = `/lists${listId ? `/${listId}` : ''}`;
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
+        expect(response.body.message).toBe('No Authorization was found in request.headers');
       },
     );
   });
@@ -55,9 +54,7 @@ describe.only('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'name'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'name'");
       });
 
       it('name must not be too short', async () => {
@@ -70,9 +67,7 @@ describe.only('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have fewer than 1 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
       });
 
       it('name must not be too long', async () => {
@@ -85,9 +80,7 @@ describe.only('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body/name must NOT have more than 25 characters"`,
-        );
+        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
       });
     });
 
@@ -152,7 +145,7 @@ describe.only('[Lists] - /lists', () => {
       });
 
       expect(response.statusCode).toBe(404);
-      expect(response.body.message).toMatchInlineSnapshot(`"list not found"`);
+      expect(response.body.message).toBe('list not found');
     });
 
     it('deletes list and attached list items', async () => {

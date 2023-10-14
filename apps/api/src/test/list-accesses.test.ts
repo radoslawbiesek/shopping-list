@@ -1,6 +1,7 @@
 import { FastifyInstance, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { Access, List, ListAccess, User } from '@prisma/client';
+import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import {
@@ -54,9 +55,7 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
         const url = getUrl(listAccessId);
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
+        expect(response.body.message).toEqual('No Authorization was found in request.headers');
       },
     );
   });
@@ -82,7 +81,7 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
 
         const response = await client(options);
         expect(response.statusCode).toBe(404);
-        expect(response.body.message).toMatchInlineSnapshot(`"list with given id does not exist"`);
+        expect(response.body.message).toEqual('list with given id does not exist');
       },
     );
   });
@@ -109,8 +108,8 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
 
         const response = await client(options);
         expect(response.statusCode).toBe(403);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"you do not have persmissions to perform this action"`,
+        expect(response.body.message).toEqual(
+          'you do not have persmissions to perform this action',
         );
       },
     );
@@ -126,9 +125,7 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"body must have required property 'userId'"`,
-        );
+        expect(response.body.message).toBe("body must have required property 'userId'");
       });
 
       it('userId must be valid', async () => {
@@ -141,7 +138,7 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"user with given id does not exist"`);
+        expect(response.body.message).toBe('user with given id does not exist');
       });
     });
 

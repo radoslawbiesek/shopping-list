@@ -1,6 +1,7 @@
 import { FastifyInstance, HTTPMethods, InjectOptions } from 'fastify';
 import { faker } from '@faker-js/faker';
 import { List, ListItem, Product, User } from '@prisma/client';
+import { describe, it, beforeAll, afterEach, afterAll, expect } from 'vitest';
 
 import { startServer } from '../server';
 import {
@@ -58,9 +59,7 @@ describe('[List items] - /lists/:listId/items', () => {
         const url = getUrl(listItemId);
         const response = await client({ method, url });
         expect(response.statusCode).toBe(401);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"No Authorization was found in request.headers"`,
-        );
+        expect(response.body.message).toBe('No Authorization was found in request.headers');
       },
     );
   });
@@ -81,7 +80,7 @@ describe('[List items] - /lists/:listId/items', () => {
         };
         const response = await client({ method, url, payload });
         expect(response.statusCode).toBe(404);
-        expect(response.body.message).toMatchInlineSnapshot(`"list with given id does not exist"`);
+        expect(response.body.message).toBe('list with given id does not exist');
       },
     );
   });
@@ -103,7 +102,7 @@ describe('[List items] - /lists/:listId/items', () => {
         };
         const response = await client({ method, url, payload });
         expect(response.statusCode).toBe(404);
-        expect(response.body.message).toMatchInlineSnapshot(`"list with given id does not exist"`);
+        expect(response.body.message).toBe('list with given id does not exist');
       },
     );
   });
@@ -120,9 +119,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(
-          `"productId: product with given id does not exist"`,
-        );
+        expect(response.body.message).toBe('productId: product with given id does not exist');
       });
 
       it('amount must be a positive integer', async () => {
@@ -136,7 +133,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/amount must be >= 0"`);
+        expect(response.body.message).toBe('body/amount must be >= 0');
       });
 
       it('isPriority must be a boolean', async () => {
@@ -150,7 +147,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/isPriority must be boolean"`);
+        expect(response.body.message).toBe('body/isPriority must be boolean');
       });
 
       it('isChecked must be a boolean', async () => {
@@ -164,7 +161,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/isChecked must be boolean"`);
+        expect(response.body.message).toBe('body/isChecked must be boolean');
       });
     });
 
@@ -233,7 +230,7 @@ describe('[List items] - /lists/:listId/items', () => {
       });
 
       expect(response.statusCode).toBe(404);
-      expect(response.body.message).toMatchInlineSnapshot(`"list item not found"`);
+      expect(response.body.message).toBe('list item not found');
     });
 
     it('deletes list item', async () => {
@@ -263,7 +260,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/amount must be >= 0"`);
+        expect(response.body.message).toBe('body/amount must be >= 0');
       });
 
       it('isPriority must be a boolean', async () => {
@@ -276,7 +273,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/isPriority must be boolean"`);
+        expect(response.body.message).toBe('body/isPriority must be boolean');
       });
 
       it('isChecked must be a boolean', async () => {
@@ -289,7 +286,7 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot(`"body/isChecked must be boolean"`);
+        expect(response.body.message).toBe('body/isChecked must be boolean');
       });
     });
 
