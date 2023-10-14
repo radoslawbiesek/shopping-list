@@ -2,10 +2,11 @@ import Fastify from 'fastify';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 
 import { config } from './config';
+import { logger } from './logger';
 
 export async function startServer() {
   const app = Fastify({
-    logger: config.nodeEnv !== 'test',
+    logger,
   }).withTypeProvider<TypeBoxTypeProvider>();
 
   await app.register(import('@fastify/cors'), { origin: true });
@@ -34,6 +35,6 @@ export async function startServer() {
   await app.register(import('./list-accesses/list-accesses.routes'));
 
   await app.listen({ port: config.port });
-
+  console.log('test');
   return app;
 }
