@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 
-const productSchema = Type.Object({
+export const productReplySchema = Type.Object({
   id: Type.Number(),
   name: Type.String(),
   categoryId: Type.Number(),
@@ -12,20 +12,15 @@ const productSchema = Type.Object({
   createdBy: Type.Number(),
 });
 
-export const createProductSchema = {
-  body: Type.Object({
-    name: Type.String({ minLength: 1, maxLength: 25 }),
-    description: Type.Optional(Type.String({ maxLength: 120 })),
-    image: Type.Optional(Type.String({ format: 'uri' })),
-    categoryId: Type.Integer(),
-  }),
-  response: {
-    200: productSchema,
-  },
-};
+export const createProductRequestBodySchema = Type.Object({
+  name: Type.String({ minLength: 1, maxLength: 25 }),
+  description: Type.Optional(Type.String({ maxLength: 120 })),
+  image: Type.Optional(Type.String({ format: 'uri' })),
+  categoryId: Type.Integer(),
+});
 
-export const getAllProductsSchema = {
-  response: {
-    200: Type.Array(productSchema),
-  },
-};
+export const getAllProductsReplySchema = Type.Array(productReplySchema);
+
+export type ProductReply = Static<typeof productReplySchema>;
+export type CreateProductRequestBody = Static<typeof createProductRequestBodySchema>;
+export type GetAllProductsReply = Static<typeof getAllProductsReplySchema>;
