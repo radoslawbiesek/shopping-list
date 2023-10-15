@@ -20,58 +20,48 @@ import {
 } from './list-items.schema';
 
 const listItemsRoutes: FastifyPluginAsync = async (app) => {
-  app.addHook('onRequest', app.authenticate);
-  app.addHook('preHandler', validateListItemAccessPreHandler);
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists/:listId/items',
-    method: 'POST',
-    schema: {
-      params: listItemParamsSchema,
-      body: createListItemRequestBodySchema,
-      response: {
-        200: listItemReplySchema,
+  app
+    .withTypeProvider<TypeBoxTypeProvider>()
+    .addHook('onRequest', app.authenticate)
+    .addHook('preHandler', validateListItemAccessPreHandler)
+    .get('/lists/:listId/items', {
+      schema: {
+        params: listItemParamsSchema,
+        response: {
+          200: getAllListItemsReplySchema,
+        },
       },
-    },
-    handler: createListItemHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists/:listId/items',
-    method: 'GET',
-    schema: {
-      params: listItemParamsSchema,
-      response: {
-        200: getAllListItemsReplySchema,
+      handler: getAllListItemsHandler,
+    })
+    .post('/lists/:listId/items', {
+      schema: {
+        params: listItemParamsSchema,
+        body: createListItemRequestBodySchema,
+        response: {
+          200: listItemReplySchema,
+        },
       },
-    },
-    handler: getAllListItemsHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists/:listId/items/:id',
-    method: 'DELETE',
-    schema: {
-      params: deleteListItemParamsSchema,
-      response: {
-        204: deleteReplySchema,
+      handler: createListItemHandler,
+    })
+    .patch('/lists/:listId/items/:id', {
+      schema: {
+        params: updateListItemParamsSchema,
+        body: updateListItemRequestBodySchema,
+        response: {
+          200: listItemReplySchema,
+        },
       },
-    },
-    handler: deleteListItemHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists/:listId/items/:id',
-    method: 'PATCH',
-    schema: {
-      params: updateListItemParamsSchema,
-      body: updateListItemRequestBodySchema,
-      response: {
-        200: listItemReplySchema,
+      handler: updateListItemHandler,
+    })
+    .delete('/lists/:listId/items/:id', {
+      schema: {
+        params: deleteListItemParamsSchema,
+        response: {
+          204: deleteReplySchema,
+        },
       },
-    },
-    handler: updateListItemHandler,
-  });
+      handler: deleteListItemHandler,
+    });
 };
 
 export default listItemsRoutes;

@@ -14,42 +14,35 @@ import {
 } from './categories.schema';
 
 const categoriesRoutes: FastifyPluginAsync = async (app) => {
-  app.addHook('onRequest', app.authenticate);
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/categories',
-    method: 'POST',
-    schema: {
-      body: createCategoryRequestBodySchema,
-      response: {
-        200: categoryReplySchema,
+  app
+    .withTypeProvider<TypeBoxTypeProvider>()
+    .addHook('onRequest', app.authenticate)
+    .get('/categories', {
+      schema: {
+        response: {
+          200: allCategoriesReplySchema,
+        },
       },
-    },
-    handler: createCategoryHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/categories',
-    method: 'GET',
-    schema: {
-      response: {
-        200: allCategoriesReplySchema,
+      handler: getAllCategoriesHandler,
+    })
+    .post('/categories', {
+      schema: {
+        body: createCategoryRequestBodySchema,
+        response: {
+          200: categoryReplySchema,
+        },
       },
-    },
-    handler: getAllCategoriesHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/categories/:id',
-    method: 'DELETE',
-    schema: {
-      params: deleteParamsSchema,
-      response: {
-        204: deleteReplySchema,
+      handler: createCategoryHandler,
+    })
+    .delete('/categories/:id', {
+      schema: {
+        params: deleteParamsSchema,
+        response: {
+          204: deleteReplySchema,
+        },
       },
-    },
-    handler: deleteCategoryHandler,
-  });
+      handler: deleteCategoryHandler,
+    });
 };
 
 export default categoriesRoutes;

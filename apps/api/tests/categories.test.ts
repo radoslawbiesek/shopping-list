@@ -37,9 +37,9 @@ afterAll(async () => {
 describe('[Categories] - /categories', () => {
   describe('authentication', () => {
     test.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
     ])(
       '%s request requires authentication',
       async (method: InjectOptions['method'], categoryId?: number) => {

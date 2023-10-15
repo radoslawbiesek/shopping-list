@@ -10,7 +10,7 @@ import {
   GetAllListAccessesReply,
   ListAccessParams,
   ListAccessReply,
-} from './list-accesses.schema';
+} from './list-access.schema';
 
 export async function validateOwnershipPreHandler(
   request: FastifyRequest<{ Params: ListAccessParams }>,

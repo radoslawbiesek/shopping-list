@@ -35,19 +35,19 @@ afterAll(async () => {
 });
 
 const getUrl = (listAccessId?: number, listId?: number) => {
-  let url = `/lists/${listId ?? list.id}/accesses`;
+  let url = `/lists/${listId ?? list.id}/access`;
   if (listAccessId) {
     url += `/${listAccessId}`;
   }
   return url;
 };
 
-describe('[List accesses] - /lists/:listId/accesses', () => {
+describe('[List access] - /lists/:listId/access', () => {
   describe('authentication', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
     ])(
       '%s request requires authentication',
       async (method: InjectOptions['method'], listAccessId?: number) => {
@@ -62,9 +62,9 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
 
   describe('listId validation', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
     ])(
       'validates if the list exists for the %s request',
       async (method: InjectOptions['method'], listAccessId?: number) => {
@@ -88,9 +88,9 @@ describe('[List accesses] - /lists/:listId/accesses', () => {
 
   describe('authorization', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
     ])(
       'validates whether the user has access to the list for the %s request',
       async (method: InjectOptions['method'], listAccessId?: number) => {

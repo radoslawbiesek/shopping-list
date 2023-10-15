@@ -48,10 +48,10 @@ const getUrl = (listItemId?: number, listId?: number) => {
 describe('[List items] - /lists/:listId/items', () => {
   describe('authentication', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
-      ['PATCH', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
+      ['PATCH', faker.datatype.number()] as const,
     ])(
       '%s request requires authentication',
       async (method: InjectOptions['method'], listItemId?: number) => {
@@ -66,10 +66,10 @@ describe('[List items] - /lists/:listId/items', () => {
 
   describe('listId validation', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
-      ['PATCH', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
+      ['PATCH', faker.datatype.number()] as const,
     ])(
       'validates if the list exists for the %s request',
       async (method: InjectOptions['method'], listItemId?: number) => {
@@ -87,10 +87,10 @@ describe('[List items] - /lists/:listId/items', () => {
 
   describe('authorization', () => {
     it.each([
-      ['GET', null],
-      ['POST', null],
-      ['DELETE', faker.datatype.number()],
-      ['PATCH', faker.datatype.number()],
+      ['GET', null] as const,
+      ['POST', null] as const,
+      ['DELETE', faker.datatype.number()] as const,
+      ['PATCH', faker.datatype.number()] as const,
     ])(
       'validates whether the user has access to the list for the %s request',
       async (method: InjectOptions['method'], listItemId?: number) => {

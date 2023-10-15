@@ -10,41 +10,35 @@ import {
 import { loginHandler, meHandler, registerHandler } from './auth.handlers';
 
 const authRoutes: FastifyPluginAsync = async (app) => {
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/auth/register',
-    method: 'POST',
-    schema: {
-      body: registerRequestBodySchema,
-      response: {
-        200: userReplySchema,
+  app
+    .withTypeProvider<TypeBoxTypeProvider>()
+    .post('/auth/register', {
+      schema: {
+        body: registerRequestBodySchema,
+        response: {
+          200: userReplySchema,
+        },
       },
-    },
-    handler: registerHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/auth/login',
-    method: 'POST',
-    schema: {
-      body: loginRequestBodySchema,
-      response: {
-        200: loginReplySchema,
+      handler: registerHandler,
+    })
+    .post('/auth/login', {
+      schema: {
+        body: loginRequestBodySchema,
+        response: {
+          200: loginReplySchema,
+        },
       },
-    },
-    handler: loginHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/auth/me',
-    method: 'GET',
-    onRequest: [app.authenticate],
-    schema: {
-      response: {
-        200: userReplySchema,
+      handler: loginHandler,
+    })
+    .get('/auth/me', {
+      onRequest: [app.authenticate],
+      schema: {
+        response: {
+          200: userReplySchema,
+        },
       },
-    },
-    handler: meHandler,
-  });
+      handler: meHandler,
+    });
 };
 
 export default authRoutes;

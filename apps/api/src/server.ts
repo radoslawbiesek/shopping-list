@@ -32,9 +32,9 @@ export async function startServer() {
   await app.register(import('./products/products.routes'));
   await app.register(import('./lists/lists.routes'));
   await app.register(import('./list-items/list-items.routes'));
-  await app.register(import('./list-accesses/list-accesses.routes'));
+  await app.register(import('./list-accesses/list-access.routes'));
 
   await app.listen({ port: config.port });
-  console.log('test');
+
   return app;
 }

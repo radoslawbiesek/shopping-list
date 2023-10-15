@@ -10,42 +10,35 @@ import {
 } from './lists.schema';
 
 const listsRoutes: FastifyPluginAsync = async (app) => {
-  app.addHook('onRequest', app.authenticate);
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists',
-    method: 'POST',
-    schema: {
-      body: createListRequestBodySchema,
-      response: {
-        200: listReplySchema,
+  app
+    .withTypeProvider<TypeBoxTypeProvider>()
+    .addHook('onRequest', app.authenticate)
+    .get('/lists', {
+      schema: {
+        response: {
+          200: getAllListsReplySchema,
+        },
       },
-    },
-    handler: createListHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists',
-    method: 'GET',
-    schema: {
-      response: {
-        200: getAllListsReplySchema,
+      handler: getAllListsHandler,
+    })
+    .post('/lists', {
+      schema: {
+        body: createListRequestBodySchema,
+        response: {
+          200: listReplySchema,
+        },
       },
-    },
-    handler: getAllListsHandler,
-  });
-
-  app.withTypeProvider<TypeBoxTypeProvider>().route({
-    url: '/lists/:id',
-    method: 'DELETE',
-    schema: {
-      params: deleteParamsSchema,
-      response: {
-        204: deleteReplySchema,
+      handler: createListHandler,
+    })
+    .delete('/lists/:id', {
+      schema: {
+        params: deleteParamsSchema,
+        response: {
+          204: deleteReplySchema,
+        },
       },
-    },
-    handler: deleteListHandler,
-  });
+      handler: deleteListHandler,
+    });
 };
 
 export default listsRoutes;
