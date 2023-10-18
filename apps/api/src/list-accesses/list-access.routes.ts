@@ -21,7 +21,7 @@ const listAccessesRoutes: FastifyPluginAsync = async (app) => {
     .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
     .addHook('preHandler', validateOwnershipPreHandler)
-    .get('/lists/:listId/access', {
+    .get('/:listId/access', {
       schema: {
         params: listAccessParamsSchema,
         response: {
@@ -30,7 +30,7 @@ const listAccessesRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: getAllListAccessesHandler,
     })
-    .post('/lists/:listId/access', {
+    .post('/:listId/access', {
       schema: {
         params: listAccessParamsSchema,
         body: createListAccessRequestBodySchema,
@@ -40,7 +40,7 @@ const listAccessesRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: createListAccessHandler,
     })
-    .delete('/lists/:listId/access/:id', {
+    .delete('/:listId/access/:id', {
       schema: {
         params: deleteListAccessParamsSchema,
         response: {

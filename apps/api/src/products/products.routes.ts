@@ -17,7 +17,7 @@ const productsRoutes: FastifyPluginAsync = async (app) => {
   app
     .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
-    .get('/products', {
+    .get('/', {
       schema: {
         response: {
           200: getAllProductsReplySchema,
@@ -25,7 +25,7 @@ const productsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: getAllProductsHandler,
     })
-    .post('/products', {
+    .post('/', {
       schema: {
         body: createProductRequestBodySchema,
         response: {
@@ -34,7 +34,7 @@ const productsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: createProductHandler,
     })
-    .delete('/products/:id', {
+    .delete('/:id', {
       schema: {
         params: deleteParamsSchema,
         response: {

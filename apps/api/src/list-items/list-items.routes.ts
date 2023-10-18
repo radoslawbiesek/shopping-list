@@ -24,7 +24,7 @@ const listItemsRoutes: FastifyPluginAsync = async (app) => {
     .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
     .addHook('preHandler', validateListItemAccessPreHandler)
-    .get('/lists/:listId/items', {
+    .get('/:listId/items', {
       schema: {
         params: listItemParamsSchema,
         response: {
@@ -33,7 +33,7 @@ const listItemsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: getAllListItemsHandler,
     })
-    .post('/lists/:listId/items', {
+    .post('/:listId/items', {
       schema: {
         params: listItemParamsSchema,
         body: createListItemRequestBodySchema,
@@ -43,7 +43,7 @@ const listItemsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: createListItemHandler,
     })
-    .patch('/lists/:listId/items/:id', {
+    .patch('/:listId/items/:id', {
       schema: {
         params: updateListItemParamsSchema,
         body: updateListItemRequestBodySchema,
@@ -53,7 +53,7 @@ const listItemsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: updateListItemHandler,
     })
-    .delete('/lists/:listId/items/:id', {
+    .delete('/:listId/items/:id', {
       schema: {
         params: deleteListItemParamsSchema,
         response: {

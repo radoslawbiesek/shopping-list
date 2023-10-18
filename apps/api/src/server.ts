@@ -27,12 +27,12 @@ export async function startServer() {
   await app.register(import('./auth/jwt.plugin'));
   await app.register(import('./db/db'));
 
-  await app.register(import('./auth/auth.routes'));
-  await app.register(import('./categories/categories.routes'));
-  await app.register(import('./products/products.routes'));
-  await app.register(import('./lists/lists.routes'));
-  await app.register(import('./list-items/list-items.routes'));
-  await app.register(import('./list-accesses/list-access.routes'));
+  await app.register(import('./auth/auth.routes'), { prefix: 'auth' });
+  await app.register(import('./categories/categories.routes'), { prefix: 'categories' });
+  await app.register(import('./products/products.routes'), { prefix: 'products' });
+  await app.register(import('./lists/lists.routes'), { prefix: 'lists' });
+  await app.register(import('./list-items/list-items.routes'), { prefix: 'lists' });
+  await app.register(import('./list-accesses/list-access.routes'), { prefix: 'lists' });
 
   await app.listen({ port: config.port });
 

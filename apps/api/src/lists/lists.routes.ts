@@ -13,7 +13,7 @@ const listsRoutes: FastifyPluginAsync = async (app) => {
   app
     .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
-    .get('/lists', {
+    .get('/', {
       schema: {
         response: {
           200: getAllListsReplySchema,
@@ -21,7 +21,7 @@ const listsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: getAllListsHandler,
     })
-    .post('/lists', {
+    .post('/', {
       schema: {
         body: createListRequestBodySchema,
         response: {
@@ -30,7 +30,7 @@ const listsRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: createListHandler,
     })
-    .delete('/lists/:id', {
+    .delete('/:id', {
       schema: {
         params: deleteParamsSchema,
         response: {

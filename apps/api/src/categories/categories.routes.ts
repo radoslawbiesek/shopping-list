@@ -17,7 +17,7 @@ const categoriesRoutes: FastifyPluginAsync = async (app) => {
   app
     .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
-    .get('/categories', {
+    .get('/', {
       schema: {
         response: {
           200: allCategoriesReplySchema,
@@ -25,7 +25,7 @@ const categoriesRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: getAllCategoriesHandler,
     })
-    .post('/categories', {
+    .post('/', {
       schema: {
         body: createCategoryRequestBodySchema,
         response: {
@@ -34,7 +34,7 @@ const categoriesRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: createCategoryHandler,
     })
-    .delete('/categories/:id', {
+    .delete('/:id', {
       schema: {
         params: deleteParamsSchema,
         response: {

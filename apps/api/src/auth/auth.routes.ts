@@ -12,7 +12,7 @@ import { loginHandler, meHandler, registerHandler } from './auth.handlers';
 const authRoutes: FastifyPluginAsync = async (app) => {
   app
     .withTypeProvider<TypeBoxTypeProvider>()
-    .post('/auth/register', {
+    .post('/register', {
       schema: {
         body: registerRequestBodySchema,
         response: {
@@ -21,7 +21,7 @@ const authRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: registerHandler,
     })
-    .post('/auth/login', {
+    .post('/login', {
       schema: {
         body: loginRequestBodySchema,
         response: {
@@ -30,7 +30,7 @@ const authRoutes: FastifyPluginAsync = async (app) => {
       },
       handler: loginHandler,
     })
-    .get('/auth/me', {
+    .get('/me', {
       onRequest: [app.authenticate],
       schema: {
         response: {
