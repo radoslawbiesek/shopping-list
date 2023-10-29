@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-import * as authService from '../services/auth.service';
+import * as authService from 'services/auth.service';
 
 export async function register(data: Parameters<typeof authService.register>[0]) {
   return authService.register(data);

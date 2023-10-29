@@ -6,12 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Button, Input } from '@nextui-org/react';
 
-import * as authActions from '../../../actions/auth.actions';
-
-import { Input } from '../../ui/input/Input';
-import { Button } from '../../ui/button/Button';
-import { ErrorMessage } from '../../error-message';
+import * as authActions from 'actions/auth.actions';
 
 const defaultValues = {
   email: '',
@@ -40,6 +37,7 @@ export function LoginForm() {
     defaultValues,
     resolver: zodResolver(schema),
   });
+
   const onSubmit = async (loginData: typeof defaultValues) => {
     try {
       startTransition(async () => {
@@ -47,32 +45,37 @@ export function LoginForm() {
         router.push('/');
       });
     } catch (error) {
+      console.log(error);
       setError('root', { message: 'Podany email lub hasło są nieprawidłowe' });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onChange={() => clearErrors('root')}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      onChange={() => clearErrors('root')}
+      className="flex flex-col gap-4"
+    >
       <Input
         {...register('email')}
         label="Email"
-        placeholder="Email"
+        isInvalid={!!errors.email?.message}
         errorMessage={errors.email?.message}
       />
       <Input
         {...register('password')}
         label="Hasło"
-        placeholder="Hasło"
         type="password"
+        isInvalid={!!errors.password?.message}
         errorMessage={errors.password?.message}
       />
-      {errors.root?.message && <ErrorMessage>{errors.root.message}</ErrorMessage>}
+      {errors.root?.message && <p className="text-danger">{errors.root.message}</p>}
       <Button
-        variant="primary"
+        type="submit"
+        color="primary"
         fullWidth
-        loading={isSubmitting}
-        disabled={isSubmitting}
-        className="mt-6"
+        isLoading={isSubmitting}
+        isDisabled={isSubmitting}
       >
         Zaloguj się
       </Button>

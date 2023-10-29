@@ -3,13 +3,12 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/auth/register": {
+  '/auth/register': {
     post: {
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             /** Format: email */
             email: string;
             name: string;
@@ -21,7 +20,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               email: string;
               name: string;
               /** Format: date-time */
@@ -35,11 +34,11 @@ export interface paths {
       };
     };
   };
-  "/auth/login": {
+  '/auth/login': {
     post: {
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             email: string;
             password: string;
           };
@@ -49,7 +48,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               token: string;
               user: {
                 email: string;
@@ -66,13 +65,13 @@ export interface paths {
       };
     };
   };
-  "/auth/me": {
+  '/auth/me': {
     get: {
       responses: {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               email: string;
               name: string;
               /** Format: date-time */
@@ -86,22 +85,22 @@ export interface paths {
       };
     };
   };
-  "/categories": {
+  '/categories': {
     get: {
       responses: {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                id: number;
-                name: string;
-                parentId: null | number;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-                createdBy: number;
-              })[];
+            'application/json': {
+              id: number;
+              name: string;
+              parentId: null | number;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              createdBy: number;
+            }[];
           };
         };
       };
@@ -109,7 +108,7 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             name: string;
             parentId?: number;
           };
@@ -119,7 +118,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               name: string;
               parentId: null | number;
@@ -134,7 +133,7 @@ export interface paths {
       };
     };
   };
-  "/categories/{id}": {
+  '/categories/{id}': {
     delete: {
       parameters: {
         path: {
@@ -145,31 +144,31 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            "application/json": boolean & true;
+            'application/json': boolean & true;
           };
         };
       };
     };
   };
-  "/products": {
+  '/products': {
     get: {
       responses: {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                id: number;
-                name: string;
-                categoryId: number;
-                description: null | string;
-                image: null | string;
-                lastUsed: null | string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-                createdBy: number;
-              })[];
+            'application/json': {
+              id: number;
+              name: string;
+              categoryId: number;
+              description: null | string;
+              image: null | string;
+              lastUsed: null | string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              createdBy: number;
+            }[];
           };
         };
       };
@@ -177,7 +176,7 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             name: string;
             description?: string;
             /** Format: uri */
@@ -190,7 +189,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               name: string;
               categoryId: number;
@@ -208,7 +207,7 @@ export interface paths {
       };
     };
   };
-  "/products/{id}": {
+  '/products/{id}': {
     delete: {
       parameters: {
         path: {
@@ -219,27 +218,27 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            "application/json": boolean & true;
+            'application/json': boolean & true;
           };
         };
       };
     };
   };
-  "/lists": {
+  '/lists': {
     get: {
       responses: {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                id: number;
-                name: string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-                createdBy: number;
-              })[];
+            'application/json': {
+              id: number;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              createdBy: number;
+            }[];
           };
         };
       };
@@ -247,7 +246,7 @@ export interface paths {
     post: {
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             name: string;
           };
         };
@@ -256,7 +255,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               name: string;
               /** Format: date-time */
@@ -270,7 +269,7 @@ export interface paths {
       };
     };
   };
-  "/lists/{id}": {
+  '/lists/{id}': {
     delete: {
       parameters: {
         path: {
@@ -281,13 +280,13 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            "application/json": boolean & true;
+            'application/json': boolean & true;
           };
         };
       };
     };
   };
-  "/lists/{listId}/items": {
+  '/lists/{listId}/items': {
     get: {
       parameters: {
         path: {
@@ -298,19 +297,19 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                id: number;
-                listId: number;
-                productId: number;
-                isChecked: boolean;
-                isPriority: boolean;
-                amount: number;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-                createdBy: number;
-              })[];
+            'application/json': {
+              id: number;
+              listId: number;
+              productId: number;
+              isChecked: boolean;
+              isPriority: boolean;
+              amount: number;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              createdBy: number;
+            }[];
           };
         };
       };
@@ -323,7 +322,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             productId: number;
             /** @default false */
             isChecked: boolean;
@@ -338,7 +337,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               listId: number;
               productId: number;
@@ -356,7 +355,7 @@ export interface paths {
       };
     };
   };
-  "/lists/{listId}/items/{id}": {
+  '/lists/{listId}/items/{id}': {
     delete: {
       parameters: {
         path: {
@@ -368,7 +367,7 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            "application/json": boolean & true;
+            'application/json': boolean & true;
           };
         };
       };
@@ -382,7 +381,7 @@ export interface paths {
       };
       requestBody?: {
         content: {
-          "application/json": {
+          'application/json': {
             isChecked?: boolean;
             isPriority?: boolean;
             amount?: number;
@@ -393,7 +392,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               listId: number;
               productId: number;
@@ -411,7 +410,7 @@ export interface paths {
       };
     };
   };
-  "/lists/{listId}/accesses": {
+  '/lists/{listId}/accesses': {
     get: {
       parameters: {
         path: {
@@ -422,16 +421,16 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": ({
-                id: number;
-                listId: number;
-                userId: number;
-                access: string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-              })[];
+            'application/json': {
+              id: number;
+              listId: number;
+              userId: number;
+              access: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            }[];
           };
         };
       };
@@ -444,7 +443,7 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": {
+          'application/json': {
             userId: number;
           };
         };
@@ -453,7 +452,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            'application/json': {
               id: number;
               listId: number;
               userId: number;
@@ -468,7 +467,7 @@ export interface paths {
       };
     };
   };
-  "/lists/{listId}/accesses/{id}": {
+  '/lists/{listId}/accesses/{id}': {
     delete: {
       parameters: {
         path: {
@@ -480,7 +479,7 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            "application/json": boolean & true;
+            'application/json': boolean & true;
           };
         };
       };
@@ -491,8 +490,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 
 export interface components {
-  schemas: {
-  };
+  schemas: {};
   responses: never;
   parameters: never;
   requestBodies: never;

@@ -1,6 +1,8 @@
-import * as listsService from '../../../services/lists.service';
+import Link from 'next/link';
 
-import { Card } from '../../../components/ui/card/Card';
+import { Card, CardBody, CardFooter } from '@nextui-org/react';
+
+import * as listsService from 'services/lists.service';
 
 async function getAllLists() {
   const response = await listsService.getAll({});
@@ -11,18 +13,25 @@ export default async function Lists() {
   const lists = await getAllLists();
 
   return (
-    <div className=" flex flex-col items-center">
-      <h1 className="font-semibold text-3xl my-4">Listy zakupów</h1>
-      <Card className="my-2" title="Dodaj nową listę" buttonLabel="&#x2b;" href="/lists/create" />
-      {lists?.map((list) => (
-        <Card
-          className="my-2"
-          title={list.name}
-          description={`Stworzona ${new Date(list.createdAt).toLocaleDateString('en-GB')}`}
-          buttonLabel="&rarr;"
-          href={`/lists/${list.id}`}
-        />
-      ))}
+    <div>
+      <h1 className="my-4 text-3xl font-semibold">Listy zakupów</h1>
+      <div className=" flex flex-col gap-4">
+        <Link href="/lists/create">
+          <Card isPressable>Dodaj nową listę</Card>
+        </Link>
+        {lists?.map((list) => (
+          <Link href={`/lists/${list.id}`}>
+            <Card isPressable>
+              <CardBody>{list.name}</CardBody>
+              <CardFooter>
+                <p className="text-default-500">
+                  Stworzona {new Date(list.createdAt).toLocaleDateString('pl-PL')}
+                </p>
+              </CardFooter>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

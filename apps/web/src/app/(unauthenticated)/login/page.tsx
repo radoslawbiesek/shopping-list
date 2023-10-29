@@ -1,18 +1,17 @@
-import { AuthHeader } from '../../../components/auth/auth-header/AuthHeader';
-import { LoginForm } from '../../../components/auth/login-form/LoginForm';
+import NextLink from 'next/link';
+
+import { Link } from '@nextui-org/react';
+
+import { LoginForm } from 'components/auth/LoginForm';
 
 export default function Login() {
   return (
-    <div className="h-screen flex justify-center items-center">
-      <main className="prose p-5 bg-white rounded-lg w-80">
-        <AuthHeader
-          heading="Zaloguj się"
-          text="Nie masz konta?"
-          linkLabel="Zarejestruj się"
-          linkUrl="/register"
-        />
-        <LoginForm />
-      </main>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-center text-2xl font-bold">Logowanie</h1>
+      <LoginForm />
+      <Link size="sm" href="/register" as={NextLink}>
+        Nie masz konta? Zarejestruj się
+      </Link>
     </div>
   );
 }
