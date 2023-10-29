@@ -1,6 +1,6 @@
 'use server';
 
-import { cookies } from '../lib/cookies';
+import { cookies } from 'next/headers';
 
 import * as authService from '../services/auth.service';
 
