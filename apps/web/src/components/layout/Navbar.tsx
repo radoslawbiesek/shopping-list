@@ -4,10 +4,10 @@ import React from 'react';
 import NextLink from 'next/link';
 
 import {
+  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
-  Link,
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
@@ -16,7 +16,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
-  DropdownSection,
 } from '@nextui-org/react';
 
 import * as authActions from 'actions/auth.actions';
@@ -28,18 +27,20 @@ type NavigationProps = {
 };
 
 export function Navigation({ name }: NavigationProps) {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [, startTransition] = React.useTransition();
 
   const onLogout = async () => {
     startTransition(async () => {
+      setIsMenuOpen(false);
       await authActions.logout();
     });
   };
 
   return (
-    <Navbar>
+    <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} maxWidth="full">
       <NavbarContent justify="start">
-        <NavbarMenuToggle />
+        <NavbarMenuToggle aria-label={isMenuOpen ? 'Zamknij menu' : 'Otwórz menu'} />
       </NavbarContent>
       <NavbarContent justify="center">
         <NavbarBrand>
@@ -59,14 +60,13 @@ export function Navigation({ name }: NavigationProps) {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownSection
-              classNames={{ heading: 'font-bold text-sm' }}
-              title={`Zalogowany jako ${name}`}
-            >
-              <DropdownItem key="logout" color="danger" onPress={onLogout}>
-                Wyloguj
-              </DropdownItem>
-            </DropdownSection>
+            <DropdownItem isReadOnly className="h-14 gap-2">
+              <p className="font-semibold">Zalogowany jako</p>
+              <p className="font-semibold">{name}</p>
+            </DropdownItem>
+            <DropdownItem key="logout" color="danger" onPress={onLogout}>
+              Wyloguj
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
@@ -74,7 +74,14 @@ export function Navigation({ name }: NavigationProps) {
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.href}-${index}`}>
-            <Link color="primary" className="w-full" href={item.href} as={NextLink} size="lg">
+            <Link
+              color="primary"
+              className="w-full"
+              href={item.href}
+              as={NextLink}
+              size="lg"
+              onPress={() => setIsMenuOpen(false)}
+            >
               {item.label}
             </Link>
           </NavbarMenuItem>

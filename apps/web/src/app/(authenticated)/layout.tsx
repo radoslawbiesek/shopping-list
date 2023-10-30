@@ -8,10 +8,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const { data } = await authService.me();
 
     return (
-      <>
+      <div className="container mx-auto">
         <Navigation name={data.name} />
-        <div className="flex justify-center">{children}</div>
-      </>
+        <main className="px-4">{children}</main>
+      </div>
     );
   } catch {
     return redirect('/login');

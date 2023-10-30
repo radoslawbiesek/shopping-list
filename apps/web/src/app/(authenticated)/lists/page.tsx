@@ -1,36 +1,29 @@
-import Link from 'next/link';
+import NextLink from 'next/link';
 
-import { Card, CardBody, CardFooter } from '@nextui-org/react';
+import { Button, Card, CardBody, CardFooter } from '@nextui-org/react';
 
 import * as listsService from 'services/lists.service';
 
 async function getAllLists() {
-  const response = await listsService.getAll({});
-  return response.data;
+  const { data } = await listsService.getAll({});
+  return data;
 }
 
 export default async function Lists() {
   const lists = await getAllLists();
 
   return (
-    <div>
-      <h1 className="my-4 text-3xl font-semibold">Listy zakupów</h1>
+    <div className="w-full">
+      <h1 className="my-4 text-3xl font-semibold">Moje listy</h1>
       <div className=" flex flex-col gap-4">
-        <Link href="/lists/create">
-          <Card isPressable>Dodaj nową listę</Card>
-        </Link>
         {lists?.map((list) => (
-          <Link href={`/lists/${list.id}`}>
-            <Card isPressable>
-              <CardBody>{list.name}</CardBody>
-              <CardFooter>
-                <p className="text-default-500">
-                  Stworzona {new Date(list.createdAt).toLocaleDateString('pl-PL')}
-                </p>
-              </CardFooter>
-            </Card>
-          </Link>
+          <Card isPressable fullWidth as={NextLink} href={`/lists/${list.id}`}>
+            <CardBody>{list.name}</CardBody>
+          </Card>
         ))}
+        <Button as={NextLink} href="/lists/create" color="primary" fullWidth>
+          Dodaj nową listę
+        </Button>
       </div>
     </div>
   );
