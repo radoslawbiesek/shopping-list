@@ -1,11 +1,19 @@
 'use server';
 
+import { revalidateTag } from 'next/cache';
+
 import * as listsService from 'services/lists.service';
 
 export async function create(data: Parameters<typeof listsService.create>[0]) {
-  return listsService.create(data);
+  const response = listsService.create(data);
+  revalidateTag(listsService.LISTS_TAG);
+
+  return response;
 }
 
 export async function remove(id: number) {
-  return listsService.remove({ id });
+  const response = await listsService.remove({ id });
+  revalidateTag(listsService.LISTS_TAG);
+
+  return response;
 }

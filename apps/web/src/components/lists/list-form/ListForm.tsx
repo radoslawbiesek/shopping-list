@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { revalidateTag } from 'next/cache';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +9,6 @@ import * as z from 'zod';
 import { Button, Input } from '@nextui-org/react';
 
 import * as listsActions from 'actions/lists.actions';
-import { TAGS } from 'constants/tags';
 
 const defaultValues = {
   name: '',
@@ -40,7 +38,6 @@ export function ListForm() {
   const onSubmit = async (listData: typeof defaultValues) => {
     try {
       await listsActions.create(listData);
-      revalidateTag(TAGS.lists);
       router.push('/lists');
     } catch (error) {
       setError('root', { message: 'Coś poszło nie tak. Spróbuj ponownie później.' });

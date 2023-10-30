@@ -1,7 +1,8 @@
 import { createFetcher } from 'lib/fetcher';
-import { TAGS } from 'constants/tags';
 
-const fetcher = createFetcher({ next: { tags: [TAGS.lists] } } as any);
+export const LISTS_TAG = 'lists';
+
+const fetcher = createFetcher({ next: { tags: [LISTS_TAG] } } as any);
 
 export const create = fetcher.path('/lists').method('post').create();
 export const getAll = fetcher.path('/lists').method('get').create();

@@ -1,11 +1,9 @@
 import NextLink from 'next/link';
-import { revalidateTag } from 'next/cache';
 
 import { Button, Card, CardBody } from '@nextui-org/react';
 
 import * as listsService from 'services/lists.service';
 import * as listActions from 'actions/lists.actions';
-import { TAGS } from 'constants/tags';
 
 async function getAllLists() {
   const { data } = await listsService.getAll({});
@@ -26,8 +24,7 @@ export default async function Lists() {
               <form
                 action={async () => {
                   'use server';
-                  listActions.remove(list.id);
-                  revalidateTag(TAGS.lists);
+                  await listActions.remove(list.id);
                 }}
               >
                 <Button color="danger" size="sm" type="submit">
