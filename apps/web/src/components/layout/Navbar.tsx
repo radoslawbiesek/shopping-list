@@ -64,7 +64,7 @@ export function Navigation({ name }: NavigationProps) {
               <p className="font-semibold">Zalogowany jako</p>
               <p className="font-semibold">{name}</p>
             </DropdownItem>
-            <DropdownItem key="logout" color="danger" onPress={onLogout}>
+            <DropdownItem color="danger" onPress={onLogout}>
               Wyloguj
             </DropdownItem>
           </DropdownMenu>
