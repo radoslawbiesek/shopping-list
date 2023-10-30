@@ -15,3 +15,7 @@ export async function login(data: Parameters<typeof authService.login>[0]) {
 
   return response.data;
 }
+
+export async function logout() {
+  cookies().delete('token');
+}
