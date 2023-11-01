@@ -1,9 +1,9 @@
 import { RouteHandler } from 'fastify';
 
-import { DeleteParams, DeleteReply } from '../common/common.schema';
+import { DeleteParams, DeleteReply } from '../common/common.types';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
-import { CreateProductRequestBody, ProductReply, GetAllProductsReply } from './products.schema';
+import { CreateProductRequestBody, ProductReply, GetAllProductsReply } from './products.types';
 
 export const createProductHandler: RouteHandler<{
   Body: CreateProductRequestBody;

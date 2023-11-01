@@ -12,6 +12,3 @@ export const deleteSchema = {
     204: deleteReplySchema,
   },
 };
-
-export type DeleteParams = z.infer<typeof deleteParamsSchema>;
-export type DeleteReply = z.infer<typeof deleteReplySchema>;

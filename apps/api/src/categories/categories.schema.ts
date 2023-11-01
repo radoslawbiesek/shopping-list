@@ -1,21 +1,18 @@
 import { Static, Type } from '@sinclair/typebox';
+import { z } from 'zod';
 
-export const categoryReplySchema = Type.Object({
-  id: Type.Number(),
-  name: Type.String(),
-  parentId: Type.Union([Type.Null(), Type.Integer()]),
-  createdAt: Type.String({ format: 'date-time' }),
-  updatedAt: Type.String({ format: 'date-time' }),
-  createdBy: Type.Number(),
+export const categoryReplySchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  parentId: z.union([z.null(), z.number().int()]),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  createdBy: z.number().int(),
 });
 
-export const allCategoriesReplySchema = Type.Array(categoryReplySchema);
+export const allCategoriesReplySchema = z.array(categoryReplySchema);
 
-export const createCategoryRequestBodySchema = Type.Object({
-  name: Type.String({ minLength: 1, maxLength: 25 }),
-  parentId: Type.Optional(Type.Integer()),
+export const createCategoryRequestBodySchema = z.object({
+  name: z.string().min(1).max(25),
+  parentId: z.optional(z.number().int()),
 });
-
-export type CategoryReply = Static<typeof categoryReplySchema>;
-export type AllCategoriesReply = Static<typeof allCategoriesReplySchema>;
-export type CreateCategoryRequestBody = Static<typeof createCategoryRequestBodySchema>;

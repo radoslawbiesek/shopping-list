@@ -1,4 +1,3 @@
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
 
 import { deleteReplySchema } from '../common/common.schema';
@@ -18,7 +17,6 @@ import {
 
 const listAccessesRoutes: FastifyPluginAsync = async (app) => {
   app
-    .withTypeProvider<TypeBoxTypeProvider>()
     .addHook('onRequest', app.authenticate)
     .addHook('preHandler', validateOwnershipPreHandler)
     .get('/:listId/access', {

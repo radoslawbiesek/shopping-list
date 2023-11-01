@@ -1,4 +1,3 @@
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { FastifyPluginAsync } from 'fastify';
 
 import {
@@ -11,7 +10,6 @@ import { loginHandler, meHandler, registerHandler } from './auth.handlers';
 
 const authRoutes: FastifyPluginAsync = async (app) => {
   app
-    .withTypeProvider<TypeBoxTypeProvider>()
     .post('/register', {
       schema: {
         body: registerRequestBodySchema,

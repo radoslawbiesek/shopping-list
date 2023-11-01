@@ -1,6 +1,6 @@
 import { RouteHandler, FastifyRequest } from 'fastify';
 
-import { DeleteReply } from '../common/common.schema';
+import { DeleteReply } from '../common/common.types';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 import {
@@ -11,7 +11,7 @@ import {
   ListItemReply,
   UpdateListItemParams,
   UpdateListItemRequestBody,
-} from './list-items.schema';
+} from './list-items.types';
 
 export async function validateListItemAccessPreHandler(
   request: FastifyRequest<{ Params: ListItemParams }>,

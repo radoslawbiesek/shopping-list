@@ -1,7 +1,7 @@
 import { RouteHandler } from 'fastify';
 
 import { CreateListRequestBody, GetAllListsReply, ListReply } from './lists.types';
-import { DeleteParams, DeleteReply } from '../common/common.schema';
+import { DeleteParams, DeleteReply } from '../common/common.types';
 import { stringifyDates } from '../utils/format';
 
 export const createListHandler: RouteHandler<{ Body: CreateListRequestBody; Reply: ListReply }> =

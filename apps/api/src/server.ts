@@ -51,7 +51,7 @@ export async function startServer() {
   await app.register(import('./products/products.routes'), { prefix: 'products' });
   await app.register(import('./lists/lists.routes'), { prefix: 'lists' });
   await app.register(import('./list-items/list-items.routes'), { prefix: 'lists' });
-  await app.register(import('./list-accesses/list-access.routes'), { prefix: 'lists' });
+  await app.register(import('./list-access/list-access.routes'), { prefix: 'lists' });
 
   await app.listen({ port: config.port });
 

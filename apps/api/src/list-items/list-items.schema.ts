@@ -1,47 +1,39 @@
-import { Static, Type } from '@sinclair/typebox';
+import { z } from 'zod';
 
-export const listItemReplySchema = Type.Object({
-  id: Type.Integer(),
-  listId: Type.Integer(),
-  productId: Type.Integer(),
-  isChecked: Type.Boolean(),
-  isPriority: Type.Boolean(),
-  amount: Type.Integer(),
-  createdAt: Type.String({ format: 'date-time' }),
-  updatedAt: Type.String({ format: 'date-time' }),
-  createdBy: Type.Integer(),
+export const listItemReplySchema = z.object({
+  id: z.number().int(),
+  listId: z.number().int(),
+  productId: z.number().int(),
+  isChecked: z.boolean(),
+  isPriority: z.boolean(),
+  amount: z.number().int(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  createdBy: z.number().int(),
 });
 
-export const getAllListItemsReplySchema = Type.Array(listItemReplySchema);
+export const getAllListItemsReplySchema = z.array(listItemReplySchema);
 
-export const listItemParamsSchema = Type.Object({
-  listId: Type.Integer(),
+export const listItemParamsSchema = z.object({
+  listId: z.number().int(),
 });
 
-export const createListItemRequestBodySchema = Type.Object({
-  productId: Type.Integer(),
-  isChecked: Type.Boolean({ default: false }),
-  isPriority: Type.Boolean({ default: false }),
-  amount: Type.Integer({ minimum: 0, default: 1 }),
+export const createListItemRequestBodySchema = z.object({
+  productId: z.number().int(),
+  isChecked: z.boolean().default(false),
+  isPriority: z.boolean().default(false),
+  amount: z.number().int().min(0).default(1),
 });
 
-export const deleteListItemParamsSchema = Type.Object({
-  listId: Type.Integer(),
-  id: Type.Integer(),
+export const deleteListItemParamsSchema = z.object({
+  listId: z.number().int(),
+  id: z.number().int(),
 });
 
 export const updateListItemParamsSchema = deleteListItemParamsSchema;
 
-export const updateListItemRequestBodySchema = Type.Object({
-  isChecked: Type.Optional(Type.Boolean()),
-  isPriority: Type.Optional(Type.Boolean()),
-  amount: Type.Optional(Type.Integer({ minimum: 0 })),
+export const updateListItemRequestBodySchema = z.object({
+  isChecked: z.optional(z.boolean()),
+  isPriority: z.optional(z.boolean()),
+  amount: z.optional(z.number().int().min(0)),
 });
-
-export type ListItemParams = Static<typeof listItemParamsSchema>;
-export type CreateListItemRequestBody = Static<typeof createListItemRequestBodySchema>;
-export type ListItemReply = Static<typeof listItemReplySchema>;
-export type GetAllListItemsReply = Static<typeof getAllListItemsReplySchema>;
-export type DeleteListItemParams = Static<typeof deleteListItemParamsSchema>;
-export type UpdateListItemParams = Static<typeof updateListItemParamsSchema>;
-export type UpdateListItemRequestBody = Static<typeof updateListItemRequestBodySchema>;

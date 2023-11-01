@@ -1,7 +1,7 @@
 import { Access } from '@prisma/client';
 import { FastifyRequest, RouteHandler } from 'fastify';
 
-import { DeleteReply } from '../common/common.schema';
+import { DeleteReply } from '../common/common.types';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 import {
@@ -10,7 +10,7 @@ import {
   GetAllListAccessesReply,
   ListAccessParams,
   ListAccessReply,
-} from './list-access.schema';
+} from './list-access.types';
 
 export async function validateOwnershipPreHandler(
   request: FastifyRequest<{ Params: ListAccessParams }>,
