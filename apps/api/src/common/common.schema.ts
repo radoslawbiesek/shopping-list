@@ -1,10 +1,10 @@
-import { Static, Type } from '@sinclair/typebox';
+import { z } from 'zod';
 
-export const deleteParamsSchema = Type.Object({
-  id: Type.Integer(),
+export const deleteParamsSchema = z.object({
+  id: z.coerce.number(),
 });
 
-export const deleteReplySchema = Type.Never();
+export const deleteReplySchema = z.never();
 
 export const deleteSchema = {
   params: deleteParamsSchema,
@@ -13,5 +13,5 @@ export const deleteSchema = {
   },
 };
 
-export type DeleteParams = Static<typeof deleteParamsSchema>;
-export type DeleteReply = Static<typeof deleteReplySchema>;
+export type DeleteParams = z.infer<typeof deleteParamsSchema>;
+export type DeleteReply = z.infer<typeof deleteReplySchema>;

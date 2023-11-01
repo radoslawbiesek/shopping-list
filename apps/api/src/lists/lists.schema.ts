@@ -1,19 +1,21 @@
-import { Static, Type } from '@sinclair/typebox';
+import { z } from 'zod';
 
-export const listReplySchema = Type.Object({
-  id: Type.Integer(),
-  name: Type.String(),
-  createdAt: Type.String({ format: 'date-time' }),
-  updatedAt: Type.String({ format: 'date-time' }),
-  createdBy: Type.Integer(),
+export const listReplySchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  createdBy: z.number(),
 });
 
-export const createListRequestBodySchema = Type.Object({
-  name: Type.String({ minLength: 1, maxLength: 25 }),
+export const createListRequestBodySchema = z.object({
+  name: z
+    .string({
+      required_error: 'Nazwa jest wymagana',
+      invalid_type_error: 'Nazwa musi być ciągiem znaków',
+    })
+    .min(1, { message: 'Nazwa jest wymagana' })
+    .max(25, { message: 'Nazwa musi mieć mniej niż 25 znaków' }),
 });
 
-export const getAllListsReplySchema = Type.Array(listReplySchema);
-
-export type CreateListRequestBody = Static<typeof createListRequestBodySchema>;
-export type ListReply = Static<typeof listReplySchema>;
-export type GetAllListsReply = Static<typeof getAllListsReplySchema>;
+export const getAllListsReplySchema = z.array(listReplySchema);

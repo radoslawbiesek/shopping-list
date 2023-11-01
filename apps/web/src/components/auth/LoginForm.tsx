@@ -5,23 +5,15 @@ import { useRouter } from 'next/navigation';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button, Input } from '@nextui-org/react';
 
 import * as authActions from 'actions/auth.actions';
+import { loginRequestBodySchema } from 'api/src/auth/auth.schema';
 
 const defaultValues = {
   email: '',
   password: '',
 };
-
-const schema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Email jest wymagany' })
-    .email({ message: 'Email jest nieprawidłowy' }),
-  password: z.string().min(1, { message: 'Hasło jest wymagane' }),
-});
 
 export function LoginForm() {
   const [, startTransition] = React.useTransition();
@@ -35,7 +27,7 @@ export function LoginForm() {
     clearErrors,
   } = useForm({
     defaultValues,
-    resolver: zodResolver(schema),
+    resolver: zodResolver(loginRequestBodySchema),
   });
 
   const onSubmit = async (loginData: typeof defaultValues) => {
@@ -45,7 +37,6 @@ export function LoginForm() {
         router.push('/');
       });
     } catch (error) {
-      console.log(error);
       setError('root', { message: 'Podany email lub hasło są nieprawidłowe' });
     }
   };

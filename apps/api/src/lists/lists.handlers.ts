@@ -1,6 +1,6 @@
 import { RouteHandler } from 'fastify';
 
-import { CreateListRequestBody, GetAllListsReply, ListReply } from './lists.schema';
+import { CreateListRequestBody, GetAllListsReply, ListReply } from './lists.types';
 import { DeleteParams, DeleteReply } from '../common/common.schema';
 import { stringifyDates } from '../utils/format';
 

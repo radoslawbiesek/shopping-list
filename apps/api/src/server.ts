@@ -1,5 +1,11 @@
 import Fastify from 'fastify';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+} from 'fastify-type-provider-zod';
+import { ZodError } from 'zod';
 
 import { config } from './config';
 import { logger } from './logger';
@@ -7,7 +13,19 @@ import { logger } from './logger';
 export async function startServer() {
   const app = Fastify({
     logger,
-  }).withTypeProvider<TypeBoxTypeProvider>();
+  });
+
+  app
+    .withTypeProvider<ZodTypeProvider>()
+    .setValidatorCompiler(validatorCompiler)
+    .setSerializerCompiler(serializerCompiler)
+    .setErrorHandler((error, request, reply) => {
+      if (error instanceof ZodError) {
+        return reply.status(400).send(new Error(error.issues[0].message));
+      }
+
+      reply.send(error);
+    });
 
   await app.register(import('@fastify/cors'), { origin: true });
   await app.register(import('@fastify/sensible'));
@@ -19,6 +37,7 @@ export async function startServer() {
         version: config.version,
       },
     },
+    transform: jsonSchemaTransform,
   });
   await app.register(import('@fastify/swagger-ui'), {
     routePrefix: '/docs',

@@ -5,34 +5,16 @@ import { useRouter } from 'next/navigation';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button, Input } from '@nextui-org/react';
 
 import * as authActions from 'actions/auth.actions';
+import { registerRequestBodySchema } from 'api/src/auth/auth.schema';
 
 export const defaultValues = {
   email: '',
   name: '',
   password: '',
 };
-
-const schema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Email jest wymagany' })
-    .max(50, { message: 'Email nie może mieć więcej niż 50 znaków' })
-    .email({ message: 'Email jest nieprawidłowy' }),
-  name: z
-    .string()
-    .min(1, { message: 'Nazwa użytkownika jest wymagana' })
-    .min(4, { message: 'Nazwa użytkownika nie może mieć mniej niż 4 znaki' })
-    .max(25, { message: 'Nazwa użytkownika nie może mieć więcej niż 25 znaków' }),
-  password: z
-    .string()
-    .min(1, { message: 'Hasło jest wymagane' })
-    .min(8, { message: 'Hasło musi mieć co najmniej 8 znaków' })
-    .max(16, { message: 'Hasło nie może mieć więcej niż 16 znaków' }),
-});
 
 export function RegisterForm() {
   const [, startTransition] = React.useTransition();
@@ -46,7 +28,7 @@ export function RegisterForm() {
     clearErrors,
   } = useForm({
     defaultValues,
-    resolver: zodResolver(schema),
+    resolver: zodResolver(registerRequestBodySchema),
   });
 
   const onSubmit = async (registerData: typeof defaultValues) => {

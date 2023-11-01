@@ -1,7 +1,7 @@
 import { RouteHandler } from 'fastify';
 import * as bcrypt from 'bcrypt';
 
-import { RegisterRequestBody, UserReply, LoginRequestBody, LoginReply } from './auth.schema';
+import { RegisterRequestBody, UserReply, LoginRequestBody, LoginReply } from './auth.types';
 import { config } from '../config';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';

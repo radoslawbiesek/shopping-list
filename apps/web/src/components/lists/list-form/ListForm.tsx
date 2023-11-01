@@ -5,21 +5,14 @@ import { useRouter } from 'next/navigation';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button, Input } from '@nextui-org/react';
 
 import * as listsActions from 'actions/lists.actions';
+import { createListRequestBodySchema } from 'api/src/lists/lists.schema';
 
 const defaultValues = {
   name: '',
 };
-
-const schema = z.object({
-  name: z
-    .string()
-    .min(1, { message: 'Nazwa jest wymagana' })
-    .max(25, { message: 'Nazwa użytkownika nie może mieć więcej niż 25 znaków' }),
-});
 
 export function ListForm() {
   const router = useRouter();
@@ -32,7 +25,7 @@ export function ListForm() {
     clearErrors,
   } = useForm({
     defaultValues,
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createListRequestBodySchema),
   });
 
   const onSubmit = async (listData: typeof defaultValues) => {

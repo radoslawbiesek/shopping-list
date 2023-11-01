@@ -54,7 +54,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'name'");
+        expect(response.body.message).toEqual('Nazwa jest wymagana');
       });
 
       it('name must not be too short', async () => {
@@ -67,7 +67,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
+        expect(response.body.message).toBe('Nazwa jest wymagana');
       });
 
       it('name must not be too long', async () => {
@@ -80,7 +80,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
+        expect(response.body.message).toBe('Nazwa musi mieć mniej niż 25 znaków');
       });
     });
 
