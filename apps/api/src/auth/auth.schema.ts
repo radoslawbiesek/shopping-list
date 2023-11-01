@@ -15,7 +15,7 @@ export const registerRequestBodySchema = z.object({
 });
 
 export const loginRequestBodySchema = z.object({
-  email: z.string().min(1).email(),
+  email: z.string().email(),
   password: z.string().min(1),
 });
 
