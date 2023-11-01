@@ -57,7 +57,7 @@ export const deleteCategoryHandler: RouteHandler<{ Params: DeleteParams; Reply: 
 
       await this.db.category.delete({ where: { id } });
 
-      return reply.status(204).send(null);
+      return reply.status(204).send();
     } catch (error) {
       if (isPrismaError(error)) {
         switch (error.code) {

@@ -67,7 +67,7 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'name'");
+        expect(response.body.message).toMatchInlineSnapshot('"name: Required"');
       });
 
       it('name must not be too short', async () => {
@@ -81,7 +81,7 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 1 character(s)"');
       });
 
       it('name must not be too long', async () => {
@@ -95,7 +95,7 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
       });
 
       it('categoryId must be valid category id', async () => {
@@ -124,9 +124,7 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe(
-          'body/description must NOT have more than 120 characters',
-        );
+        expect(response.body.message).toMatchInlineSnapshot('"description: String must contain at most 120 character(s)"');
       });
 
       it('image must be valid url', async () => {
@@ -141,7 +139,7 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/image must match format "uri"');
+        expect(response.body.message).toMatchInlineSnapshot('"image: Invalid url"');
       });
     });
 

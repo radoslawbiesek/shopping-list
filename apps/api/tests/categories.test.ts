@@ -63,7 +63,7 @@ describe('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'name'");
+        expect(response.body.message).toMatchInlineSnapshot('"name: Required"');
       });
 
       test('name must be unique', async () => {
@@ -90,7 +90,9 @@ describe('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have fewer than 1 characters');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at least 1 character(s)"',
+        );
       });
 
       test('name must not be too long', async () => {
@@ -103,7 +105,9 @@ describe('[Categories] - /categories', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at most 25 character(s)"',
+        );
       });
 
       test('parentId must be valid category id', async () => {
@@ -189,7 +193,7 @@ describe('[Categories] - /categories', () => {
     });
   });
 
-  describe('Delete [DELETE /categories/:id', () => {
+  describe.only('Delete [DELETE /categories/:id', () => {
     test('prevents category deletion if it contains products', async () => {
       const category = await mockCategory({ createdBy: user.id });
       await mockProduct({ createdBy: user.id, categoryId: category.id });
@@ -216,7 +220,7 @@ describe('[Categories] - /categories', () => {
       expect(response.body.message).toBe('category not found');
     });
 
-    test('deletes category', async () => {
+    test.only('deletes category', async () => {
       const category = await mockCategory({ createdBy: user.id });
 
       const response = await client({

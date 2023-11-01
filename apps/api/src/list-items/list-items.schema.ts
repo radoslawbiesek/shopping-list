@@ -15,7 +15,7 @@ export const listItemReplySchema = z.object({
 export const getAllListItemsReplySchema = z.array(listItemReplySchema);
 
 export const listItemParamsSchema = z.object({
-  listId: z.number().int(),
+  listId: z.coerce.number().int(),
 });
 
 export const createListItemRequestBodySchema = z.object({
@@ -26,8 +26,8 @@ export const createListItemRequestBodySchema = z.object({
 });
 
 export const deleteListItemParamsSchema = z.object({
-  listId: z.number().int(),
-  id: z.number().int(),
+  listId: z.coerce.number().int(),
+  id: z.coerce.number().int(),
 });
 
 export const updateListItemParamsSchema = deleteListItemParamsSchema;

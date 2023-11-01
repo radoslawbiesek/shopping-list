@@ -106,7 +106,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'password'");
+        expect(response.body.message).toMatchInlineSnapshot('"password: Required"');
       });
 
       test('password must not be too short', async () => {
@@ -120,7 +120,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/password must NOT have fewer than 8 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"password: String must contain at least 8 character(s)"');
       });
 
       test('password must not be too long', async () => {
@@ -134,7 +134,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/password must NOT have more than 16 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"password: String must contain at most 16 character(s)"');
       });
 
       test('email must be valid', async () => {
@@ -148,7 +148,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/email must match format "email"');
+        expect(response.body.message).toMatchInlineSnapshot('"email: Invalid email"');
       });
 
       test('email must not be too long', async () => {
@@ -162,7 +162,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/email must NOT have more than 50 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"email: String must contain at most 50 character(s)"');
       });
 
       test('name is required', async () => {
@@ -175,7 +175,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'name'");
+        expect(response.body.message).toMatchInlineSnapshot('"name: Required"');
       });
 
       test('name must not be too short', async () => {
@@ -189,7 +189,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have fewer than 4 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 4 character(s)"');
       });
 
       test('name must not be too long', async () => {
@@ -203,7 +203,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('body/name must NOT have more than 25 characters');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
       });
 
       test('email must be unique', async () => {
@@ -264,7 +264,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'password'");
+        expect(response.body.message).toMatchInlineSnapshot('"password: Required"');
       });
 
       test('email is required', async () => {
@@ -276,7 +276,7 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'email'");
+        expect(response.body.message).toMatchInlineSnapshot('"email: Required"');
       });
 
       test('user must exist', async () => {

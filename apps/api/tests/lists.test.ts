@@ -54,7 +54,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toEqual('Nazwa jest wymagana');
+        expect(response.body.message).toMatchInlineSnapshot('"name: Required"');
       });
 
       it('name must not be too short', async () => {
@@ -67,7 +67,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('Nazwa jest wymagana');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 1 character(s)"');
       });
 
       it('name must not be too long', async () => {
@@ -80,7 +80,7 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('Nazwa musi mieć mniej niż 25 znaków');
+        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
       });
     });
 

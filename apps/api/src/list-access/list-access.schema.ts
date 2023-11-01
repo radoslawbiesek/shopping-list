@@ -12,7 +12,7 @@ export const listAccessReplySchema = z.object({
 export const getAllListAccessesReplySchema = z.array(listAccessReplySchema);
 
 export const listAccessParamsSchema = z.object({
-  listId: z.number().int(),
+  listId: z.coerce.number().int(),
 });
 
 export const createListAccessRequestBodySchema = z.object({
@@ -20,6 +20,6 @@ export const createListAccessRequestBodySchema = z.object({
 });
 
 export const deleteListAccessParamsSchema = z.object({
-  listId: z.number().int(),
-  id: z.number().int(),
+  listId: z.coerce.number().int(),
+  id: z.coerce.number().int(),
 });

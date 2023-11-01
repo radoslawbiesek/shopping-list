@@ -21,7 +21,10 @@ export async function startServer() {
     .setSerializerCompiler(serializerCompiler)
     .setErrorHandler((error, request, reply) => {
       if (error instanceof ZodError) {
-        return reply.status(400).send(new Error(error.issues[0].message));
+        const message = error.issues
+          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+          .join('\n');
+        return reply.status(400).send(new Error(message));
       }
 
       reply.send(error);

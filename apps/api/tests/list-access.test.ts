@@ -125,7 +125,7 @@ describe('[List access] - /lists/:listId/access', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe("body must have required property 'userId'");
+        expect(response.body.message).toMatchInlineSnapshot('"userId: Required"');
       });
 
       it('userId must be valid', async () => {
