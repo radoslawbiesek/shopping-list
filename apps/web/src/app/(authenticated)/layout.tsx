@@ -10,7 +10,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     return (
       <div className="container mx-auto">
         <Navigation name={data.name} />
-        <main className="px-4">{children}</main>
+        <main className="mx-auto my-4 w-96 px-4 text-center">{children}</main>
       </div>
     );
   } catch {

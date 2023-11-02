@@ -58,7 +58,10 @@ export function ListForm() {
         isLoading={isSubmitting}
         isDisabled={isSubmitting}
       >
-        Dodaj
+        Zapisz
+      </Button>
+      <Button color="danger" fullWidth onClick={() => router.back()}>
+        Anuluj
       </Button>
     </form>
   );

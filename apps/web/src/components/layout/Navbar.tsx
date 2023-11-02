@@ -19,8 +19,12 @@ import {
 } from '@nextui-org/react';
 
 import * as authActions from 'actions/auth.actions';
+import { usePathname, useRouter } from 'next/navigation';
 
-const menuItems = [{ label: 'Moje listy', href: '/lists' }] as const;
+const menuItems: readonly { label: string; href: string }[] = [
+  { label: 'Moje listy', href: '/lists' },
+  { label: 'Moje produkty', href: '/products' },
+] as const;
 
 type NavigationProps = {
   name: string;
@@ -29,6 +33,8 @@ type NavigationProps = {
 export function Navigation({ name }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [, startTransition] = React.useTransition();
+  const pathname = usePathname();
+  console.log(pathname);
 
   const onLogout = async () => {
     startTransition(async () => {
@@ -75,8 +81,8 @@ export function Navigation({ name }: NavigationProps) {
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.href}-${index}`}>
             <Link
-              color="primary"
-              className="w-full"
+              color={pathname.includes(item.href) ? 'primary' : 'foreground'}
+              className="h-full w-full py-1"
               href={item.href}
               as={NextLink}
               size="lg"
@@ -87,7 +93,7 @@ export function Navigation({ name }: NavigationProps) {
           </NavbarMenuItem>
         ))}
         <NavbarMenuItem>
-          <Link color="danger" className="w-full" size="lg" onPress={onLogout}>
+          <Link color="danger" className="w-full py-1" size="lg" onPress={onLogout}>
             Wyloguj
           </Link>
         </NavbarMenuItem>
