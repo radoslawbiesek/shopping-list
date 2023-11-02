@@ -67,7 +67,9 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 1 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at least 1 character(s)"',
+        );
       });
 
       it('name must not be too long', async () => {
@@ -80,7 +82,9 @@ describe('[Lists] - /lists', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at most 25 character(s)"',
+        );
       });
     });
 

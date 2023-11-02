@@ -268,7 +268,9 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"amount: Number must be greater than or equal to 0"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"amount: Number must be greater than or equal to 0"',
+        );
       });
 
       it('isPriority must be a boolean', async () => {
@@ -281,7 +283,9 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"isPriority: Expected boolean, received string"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"isPriority: Expected boolean, received string"',
+        );
       });
 
       it('isChecked must be a boolean', async () => {
@@ -294,7 +298,9 @@ describe('[List items] - /lists/:listId/items', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"isChecked: Expected boolean, received string"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"isChecked: Expected boolean, received string"',
+        );
       });
     });
 

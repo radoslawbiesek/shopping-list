@@ -34,7 +34,6 @@ export function Navigation({ name }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [, startTransition] = React.useTransition();
   const pathname = usePathname();
-  console.log(pathname);
 
   const onLogout = async () => {
     startTransition(async () => {

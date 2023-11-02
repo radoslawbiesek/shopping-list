@@ -39,6 +39,7 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
+            /** Format: email */
             email: string;
             password: string;
           };
@@ -85,7 +86,7 @@ export interface paths {
       };
     };
   };
-  '/categories': {
+  '/categories/': {
     get: {
       responses: {
         /** @description Default Response */
@@ -94,7 +95,7 @@ export interface paths {
             'application/json': {
               id: number;
               name: string;
-              parentId: null | number;
+              parentId: ('null' | null) | number;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -121,7 +122,7 @@ export interface paths {
             'application/json': {
               id: number;
               name: string;
-              parentId: null | number;
+              parentId: ('null' | null) | number;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -144,13 +145,13 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            'application/json': boolean & true;
+            'application/json': unknown;
           };
         };
       };
     };
   };
-  '/products': {
+  '/products/': {
     get: {
       responses: {
         /** @description Default Response */
@@ -160,9 +161,9 @@ export interface paths {
               id: number;
               name: string;
               categoryId: number;
-              description: null | string;
-              image: null | string;
-              lastUsed: null | string;
+              description: ('null' | null) | string;
+              image: ('null' | null) | string;
+              lastUsed: ('null' | null) | string;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -179,9 +180,8 @@ export interface paths {
           'application/json': {
             name: string;
             description?: string;
-            /** Format: uri */
-            image?: string;
-            categoryId: number;
+            image: string | '';
+            categoryId: number | ('null' | null);
           };
         };
       };
@@ -193,9 +193,9 @@ export interface paths {
               id: number;
               name: string;
               categoryId: number;
-              description: null | string;
-              image: null | string;
-              lastUsed: null | string;
+              description: ('null' | null) | string;
+              image: ('null' | null) | string;
+              lastUsed: ('null' | null) | string;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -218,13 +218,13 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            'application/json': boolean & true;
+            'application/json': unknown;
           };
         };
       };
     };
   };
-  '/lists': {
+  '/lists/': {
     get: {
       responses: {
         /** @description Default Response */
@@ -280,7 +280,7 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            'application/json': boolean & true;
+            'application/json': unknown;
           };
         };
       };
@@ -325,11 +325,11 @@ export interface paths {
           'application/json': {
             productId: number;
             /** @default false */
-            isChecked: boolean;
+            isChecked?: boolean;
             /** @default false */
-            isPriority: boolean;
+            isPriority?: boolean;
             /** @default 1 */
-            amount: number;
+            amount?: number;
           };
         };
       };
@@ -367,7 +367,7 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            'application/json': boolean & true;
+            'application/json': unknown;
           };
         };
       };
@@ -410,7 +410,7 @@ export interface paths {
       };
     };
   };
-  '/lists/{listId}/accesses': {
+  '/lists/{listId}/access': {
     get: {
       parameters: {
         path: {
@@ -467,7 +467,7 @@ export interface paths {
       };
     };
   };
-  '/lists/{listId}/accesses/{id}': {
+  '/lists/{listId}/access/{id}': {
     delete: {
       parameters: {
         path: {
@@ -479,7 +479,7 @@ export interface paths {
         /** @description Default Response */
         204: {
           content: {
-            'application/json': boolean & true;
+            'application/json': unknown;
           };
         };
       };

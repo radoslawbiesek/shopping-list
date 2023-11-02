@@ -120,7 +120,9 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"password: String must contain at least 8 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"password: String must contain at least 8 character(s)"',
+        );
       });
 
       test('password must not be too long', async () => {
@@ -134,7 +136,9 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"password: String must contain at most 16 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"password: String must contain at most 16 character(s)"',
+        );
       });
 
       test('email must be valid', async () => {
@@ -162,7 +166,9 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"email: String must contain at most 50 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"email: String must contain at most 50 character(s)"',
+        );
       });
 
       test('name is required', async () => {
@@ -189,7 +195,9 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 4 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at least 4 character(s)"',
+        );
       });
 
       test('name must not be too long', async () => {
@@ -203,7 +211,9 @@ describe('[Auth] - /auth', () => {
           },
         });
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at most 25 character(s)"',
+        );
       });
 
       test('email must be unique', async () => {

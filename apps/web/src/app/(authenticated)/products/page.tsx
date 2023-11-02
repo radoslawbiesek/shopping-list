@@ -6,7 +6,8 @@ import * as productsService from 'services/products.service';
 import * as productsActions from 'actions/products.actions';
 
 async function getAllProducts() {
-  const { data } = await productsService.getAll({});
+  const { data } = await productsService.getAll();
+
   return data;
 }
 

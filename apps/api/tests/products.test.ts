@@ -81,7 +81,9 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at least 1 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at least 1 character(s)"',
+        );
       });
 
       it('name must not be too long', async () => {
@@ -95,7 +97,9 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"name: String must contain at most 25 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"name: String must contain at most 25 character(s)"',
+        );
       });
 
       it('categoryId must be valid category id', async () => {
@@ -124,7 +128,9 @@ describe('[Products] - /products', () => {
         });
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toMatchInlineSnapshot('"description: String must contain at most 120 character(s)"');
+        expect(response.body.message).toMatchInlineSnapshot(
+          '"description: String must contain at most 120 character(s)"',
+        );
       });
 
       it('image must be valid url', async () => {
