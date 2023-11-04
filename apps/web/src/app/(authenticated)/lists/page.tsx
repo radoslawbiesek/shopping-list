@@ -1,40 +1,41 @@
 import NextLink from 'next/link';
 
 import { Button, Card, CardBody } from '@nextui-org/react';
+import { XMarkIcon } from '@heroicons/react/20/solid';
 
 import * as listsService from 'services/lists.service';
 import * as listActions from 'actions/lists.actions';
-
-async function getAllLists() {
-  const { data } = await listsService.getAll({});
-  return data;
-}
+import { ServerActionButton } from 'components/common/ServerActionButton';
 
 export default async function Lists() {
-  const lists = await getAllLists();
+  const { data: lists } = await listsService.getAll();
 
   return (
     <div className="w-full">
       <h1 className="my-4 text-3xl font-semibold">Moje listy</h1>
       <div className=" flex flex-col gap-4">
         {lists?.map((list) => (
-          <Card isPressable fullWidth as={NextLink} href={`/lists/${list.id}`}>
+          <Card fullWidth>
             <CardBody className="flex flex-row items-center justify-between">
-              {list.name}
-              <form
+              <NextLink className="w-full" href={`/lists/${list.id}`}>
+                {list.name}
+              </NextLink>
+              <ServerActionButton
+                isIconOnly
+                color="danger"
+                variant="light"
                 action={async () => {
                   'use server';
                   await listActions.remove(list.id);
                 }}
+                size="sm"
               >
-                <Button color="danger" size="sm" type="submit">
-                  Usuń
-                </Button>
-              </form>
+                <XMarkIcon />
+              </ServerActionButton>
             </CardBody>
           </Card>
         ))}
-        <Button as={NextLink} href="/lists/create" color="primary" fullWidth>
+        <Button as={NextLink} href="/lists/form/new" color="primary" fullWidth>
           Dodaj nową listę
         </Button>
       </div>

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import {
   Link,
@@ -19,11 +20,11 @@ import {
 } from '@nextui-org/react';
 
 import * as authActions from 'actions/auth.actions';
-import { usePathname, useRouter } from 'next/navigation';
 
 const menuItems: readonly { label: string; href: string }[] = [
-  { label: 'Moje listy', href: '/lists' },
-  { label: 'Moje produkty', href: '/products' },
+  { label: 'Listy', href: '/lists' },
+  { label: 'Produkty', href: '/products' },
+  { label: 'Kategorie', href: '/categories' },
 ] as const;
 
 type NavigationProps = {
@@ -85,7 +86,7 @@ export function Navigation({ name }: NavigationProps) {
               href={item.href}
               as={NextLink}
               size="lg"
-              onPress={() => setIsMenuOpen(false)}
+              onPress={() => setTimeout(() => setIsMenuOpen(false), 200)}
             >
               {item.label}
             </Link>

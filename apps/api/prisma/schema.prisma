@@ -26,15 +26,12 @@ model User {
 }
 
 model Category {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  parentId  Int?
-  parent    Category?  @relation("Subcategory", fields: [parentId], references: [id])
-  children  Category[] @relation("Subcategory")
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
   createdBy Int
-  user      User       @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime   @updatedAt() @db.Timestamptz(6)
+  user      User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt() @db.Timestamptz(6)
   Product   Product[]
 }
 

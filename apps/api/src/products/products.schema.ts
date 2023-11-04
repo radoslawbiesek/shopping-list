@@ -15,8 +15,8 @@ export const productReplySchema = z.object({
 export const createProductRequestBodySchema = z.object({
   name: z.string().min(1).max(25),
   description: z.optional(z.string().max(120)),
-  image: z.union([z.string().url(), z.literal('')]),
-  categoryId: z.union([z.number().int(), z.null()]),
+  image: z.optional(z.union([z.string().url(), z.literal('')])),
+  categoryId: z.union([z.coerce.number().int(), z.null()]),
 });
 
 export const getAllProductsReplySchema = z.array(productReplySchema);

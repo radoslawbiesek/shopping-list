@@ -3,28 +3,28 @@ import NextLink from 'next/link';
 import { Button, Card, CardBody } from '@nextui-org/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 
-import * as productsService from 'services/products.service';
-import * as productsActions from 'actions/products.actions';
+import * as categoriesActions from 'actions/categories.actions';
+import * as categoriesService from 'services/categories.service';
 import { ServerActionButton } from 'components/common/ServerActionButton';
 
-export default async function ProductsPage() {
-  const { data: products } = await productsService.getAll();
+export default async function CategoriesPage() {
+  const { data: categories } = await categoriesService.getAll();
 
   return (
     <div className="w-full">
-      <h1 className="my-4 text-center text-3xl font-semibold">Moje produkty</h1>
+      <h1 className="my-4 text-center text-3xl font-semibold">Moje kategorie</h1>
       <div className=" flex flex-col gap-4">
-        {products?.map((product) => (
-          <Card fullWidth>
+        {categories?.map((category) => (
+          <Card fullWidth key={category.id}>
             <CardBody className="flex flex-row items-center justify-between">
-              {product.name}
+              {category.name}
               <ServerActionButton
                 isIconOnly
                 color="danger"
                 variant="light"
                 action={async () => {
                   'use server';
-                  await productsActions.remove(product.id);
+                  await categoriesActions.remove(category.id);
                 }}
                 size="sm"
               >
@@ -33,8 +33,8 @@ export default async function ProductsPage() {
             </CardBody>
           </Card>
         ))}
-        <Button as={NextLink} href="/products/form/new" color="primary" fullWidth>
-          Dodaj nowy produkt
+        <Button as={NextLink} href="/categories/form/new" color="primary" fullWidth>
+          Dodaj nową kategorię
         </Button>
       </div>
     </div>

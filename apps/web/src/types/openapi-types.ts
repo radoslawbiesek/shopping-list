@@ -95,7 +95,6 @@ export interface paths {
             'application/json': {
               id: number;
               name: string;
-              parentId: ('null' | null) | number;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -111,7 +110,6 @@ export interface paths {
         content: {
           'application/json': {
             name: string;
-            parentId?: number;
           };
         };
       };
@@ -122,7 +120,6 @@ export interface paths {
             'application/json': {
               id: number;
               name: string;
-              parentId: ('null' | null) | number;
               /** Format: date-time */
               createdAt: string;
               /** Format: date-time */
@@ -180,7 +177,7 @@ export interface paths {
           'application/json': {
             name: string;
             description?: string;
-            image: string | '';
+            image?: string | '';
             categoryId: number | ('null' | null);
           };
         };

@@ -109,20 +109,6 @@ describe('[Categories] - /categories', () => {
           '"name: String must contain at most 25 character(s)"',
         );
       });
-
-      test('parentId must be valid category id', async () => {
-        const response = await client({
-          method: 'POST',
-          url: '/categories',
-          payload: {
-            name,
-            parentId: faker.datatype.number(),
-          },
-        });
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('parentId: category with given id does not exist');
-      });
     });
 
     test('creates category', async () => {
@@ -137,25 +123,6 @@ describe('[Categories] - /categories', () => {
 
       expect(response.statusCode).toBe(200);
       expect(response.body.name).toBe(name);
-      expect(response.body).toHaveProperty('id');
-    });
-
-    test('creates subcategory', async () => {
-      const parentCategory = await mockCategory({ createdBy: user.id });
-      const parentId = parentCategory.id;
-      const name = faker.datatype.string();
-      const response = await client({
-        method: 'POST',
-        url: '/categories',
-        payload: {
-          name,
-          parentId,
-        },
-      });
-
-      expect(response.statusCode).toBe(200);
-      expect(response.body.name).toBe(name);
-      expect(response.body.parentId).toBe(parentId);
       expect(response.body).toHaveProperty('id');
     });
   });

@@ -38,10 +38,6 @@ export function Form<T extends z.ZodTypeAny, U extends Record<string, any>>({
     }
   };
 
-  React.useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   return (
     <form
       onSubmit={handleSubmit(onFormSubmit)}

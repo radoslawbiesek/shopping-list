@@ -10,11 +10,10 @@ export const createCategoryHandler: RouteHandler<{
   Reply: CategoryReply;
 }> = async function createCategoryHandler(request) {
   try {
-    const { name, parentId } = request.body;
+    const { name } = request.body;
     const category = await this.db.category.create({
       data: {
         name,
-        parentId,
         createdBy: request.user.id,
       },
     });
