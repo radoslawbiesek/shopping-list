@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { categoryReplySchema } from '../categories/categories.schema';
+
 export const productReplySchema = z.object({
   id: z.number().int(),
   name: z.string(),
@@ -19,4 +21,6 @@ export const createProductRequestBodySchema = z.object({
   categoryId: z.union([z.coerce.number().int(), z.null()]),
 });
 
-export const getAllProductsReplySchema = z.array(productReplySchema);
+export const getAllProductsReplySchema = z.array(
+  productReplySchema.extend({ category: categoryReplySchema }),
+);

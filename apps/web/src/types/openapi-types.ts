@@ -158,6 +158,15 @@ export interface paths {
               id: number;
               name: string;
               categoryId: number;
+              category: {
+                id: number;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                createdBy: number;
+              };
               description: ('null' | null) | string;
               image: ('null' | null) | string;
               lastUsed: ('null' | null) | string;
@@ -190,6 +199,15 @@ export interface paths {
               id: number;
               name: string;
               categoryId: number;
+              category: {
+                id: number;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                createdBy: number;
+              };
               description: ('null' | null) | string;
               image: ('null' | null) | string;
               lastUsed: ('null' | null) | string;

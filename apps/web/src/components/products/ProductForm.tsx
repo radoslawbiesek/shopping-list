@@ -34,7 +34,7 @@ export function ProductForm({
       <Input name="name" label="Nazwa" placeholder="Podaj nazwę" isRequired />
       <Textarea name="description" label="Opis" placeholder="Podaj opis" maxRows={2} />
       <Input name="image" label="Obraz" placeholder="Wklej link do obrazka" />
-      <Select name="categoryId" label="Kategoria" placeholder="Wybierz kategorię">
+      <Select name="categoryId" label="Kategoria" placeholder="Wybierz kategorię" isRequired>
         {categories.map((category) => (
           <SelectItem key={category.id} value={category.id}>
             {category.name}

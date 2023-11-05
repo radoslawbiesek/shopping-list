@@ -12,12 +12,15 @@ export default async function ProductsPage() {
 
   return (
     <div className="w-full">
-      <h1 className="my-4 text-center text-3xl font-semibold">Moje produkty</h1>
+      <h1 className="my-6 text-center text-3xl font-semibold">Moje produkty</h1>
       <div className=" flex flex-col gap-4">
         {products?.map((product) => (
           <Card fullWidth>
             <CardBody className="flex flex-row items-center justify-between">
-              {product.name}
+              <div>
+                <p className="font-semibold">{product.name}</p>
+                <span className="text-foreground/80 text-xs">{product.category.name}</span>
+              </div>
               <ServerActionButton
                 isIconOnly
                 color="danger"

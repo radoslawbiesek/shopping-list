@@ -35,9 +35,10 @@ export const getAllProductsHandler: RouteHandler<{ Reply: GetAllProductsReply }>
   async function getAllProductsHandler(request) {
     const products = await this.db.product.findMany({
       where: { createdBy: request.user.id },
+      include: { category: true },
     });
 
-    return products.map(stringifyDates);
+    return products.map((p) => ({ ...stringifyDates(p), category: stringifyDates(p.category) }));
   };
 
 export const deleteProductHandler: RouteHandler<{ Params: DeleteParams; Reply: DeleteReply }> =

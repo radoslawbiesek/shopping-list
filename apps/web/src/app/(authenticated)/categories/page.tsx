@@ -12,12 +12,12 @@ export default async function CategoriesPage() {
 
   return (
     <div className="w-full">
-      <h1 className="my-4 text-center text-3xl font-semibold">Moje kategorie</h1>
+      <h1 className="my-6 text-center text-3xl font-semibold">Moje kategorie</h1>
       <div className=" flex flex-col gap-4">
         {categories?.map((category) => (
           <Card fullWidth key={category.id}>
             <CardBody className="flex flex-row items-center justify-between">
-              {category.name}
+              <p className="font-semibold">{category.name}</p>
               <ServerActionButton
                 isIconOnly
                 color="danger"

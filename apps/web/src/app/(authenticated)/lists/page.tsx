@@ -12,13 +12,13 @@ export default async function Lists() {
 
   return (
     <div className="w-full">
-      <h1 className="my-4 text-3xl font-semibold">Moje listy</h1>
+      <h1 className="my-6 text-3xl font-semibold">Moje listy</h1>
       <div className=" flex flex-col gap-4">
         {lists?.map((list) => (
           <Card fullWidth>
             <CardBody className="flex flex-row items-center justify-between">
               <NextLink className="w-full" href={`/lists/${list.id}`}>
-                {list.name}
+                <p className="font-semibold">{list.name}</p>
               </NextLink>
               <ServerActionButton
                 isIconOnly
