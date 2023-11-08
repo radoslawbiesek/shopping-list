@@ -66,9 +66,15 @@ export const getAllListItemsHandler: RouteHandler<{
       createdBy: request.user.id,
       listId,
     },
+    include: {
+      product: true,
+    },
   });
 
-  return listItems.map(stringifyDates);
+  return listItems.map((listItem) => ({
+    ...stringifyDates(listItem),
+    product: stringifyDates(listItem.product),
+  }));
 };
 
 export const deleteListItemHandler: RouteHandler<{

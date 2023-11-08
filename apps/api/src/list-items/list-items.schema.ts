@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { productReplySchema } from '../products/products.schema';
 
 export const listItemReplySchema = z.object({
   id: z.number().int(),
@@ -12,7 +13,9 @@ export const listItemReplySchema = z.object({
   createdBy: z.number().int(),
 });
 
-export const getAllListItemsReplySchema = z.array(listItemReplySchema);
+export const getAllListItemsReplySchema = z.array(
+  listItemReplySchema.extend({ product: productReplySchema }),
+);
 
 export const listItemParamsSchema = z.object({
   listId: z.coerce.number().int(),
