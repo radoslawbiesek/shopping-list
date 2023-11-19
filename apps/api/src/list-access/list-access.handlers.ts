@@ -1,7 +1,8 @@
-import { Access } from '@prisma/client';
+import { and, eq } from 'drizzle-orm';
 import { FastifyRequest, RouteHandler } from 'fastify';
 
 import { DeleteReply } from '../common/common.types';
+import { listAccessTable, listTable } from '../database/schema';
 import { isPrismaError, PrismaErrorCode } from '../db/errors';
 import { stringifyDates } from '../utils/format';
 import {
@@ -15,7 +16,9 @@ import {
 export async function validateOwnershipPreHandler(
   request: FastifyRequest<{ Params: ListAccessParams }>,
 ) {
-  const list = await this.db.list.findUnique({ where: { id: request.params.listId } });
+  const list = (
+    await this.database.select(listTable).where(eq(listTable.id, request.params.listId))
+  )[0];
 
   if (!list) {
     throw this.httpErrors.notFound('list with given id does not exist');
@@ -34,15 +37,11 @@ export const createListAccessHandler: RouteHandler<{
   try {
     const { listId } = request.params;
     const { userId } = request.body;
-
-    const listAccess = await this.db.listAccess.create({
-      data: {
-        listId,
-        userId,
-        access: Access.READ_WRITE,
-        createdBy: userId,
-      },
-    });
+    const listAccess = (
+      await this.database
+        .insert(listAccessTable)
+        .values({ listId, userId, access: 'READ_WRITE', createdBy: userId })
+    )[0];
 
     return stringifyDates(listAccess);
   } catch (error: unknown) {
@@ -61,9 +60,10 @@ export const getAllListAccessesHandler: RouteHandler<{
   Reply: GetAllListAccessesReply;
 }> = async function getAllListAccessesHandler(request) {
   const { listId } = request.params;
-  const listAccesses = await this.db.listAccess.findMany({
-    where: { listId },
-  });
+  const listAccesses = await this.database
+    .select()
+    .from(listAccessTable)
+    .where(eq(listAccessTable.listId, listId));
 
   return listAccesses.map(stringifyDates);
 };
@@ -73,12 +73,16 @@ export const deleteListAccessHandler: RouteHandler<{
   Reply: DeleteReply;
 }> = async function deleteListAccessHandler(request, reply) {
   const { id } = request.params;
-  const listAccess = await this.db.listAccess.findUnique({ where: { id } });
+
+  const listAccess = (
+    await this.database
+      .delete(listAccessTable)
+      .where(and(eq(listAccessTable.id, id), eq(listAccessTable.createdBy, request.user.id)))
+      .returning()
+  )[0];
   if (!listAccess) {
     throw this.httpErrors.notFound('list access not found');
   }
-
-  await this.db.listAccess.delete({ where: { id } });
 
   reply.status(204).send();
 };

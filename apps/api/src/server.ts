@@ -48,6 +48,7 @@ export async function startServer() {
 
   await app.register(import('./auth/jwt.plugin'));
   await app.register(import('./db/db'));
+  await app.register(import('./database/database'));
 
   await app.register(import('./auth/auth.routes'), { prefix: 'auth' });
   await app.register(import('./categories/categories.routes'), { prefix: 'categories' });

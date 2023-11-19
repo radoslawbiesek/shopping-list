@@ -1,18 +1,16 @@
-import {
-  Category,
-  PrismaClient,
-  Product,
-  User,
-  List,
-  ListItem,
-  ListAccess,
-  Access,
-} from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
-export const prisma = new PrismaClient();
+import { connection, databaseClient } from '../../src/database/database';
+import {
+  userTable,
+  categoryTable,
+  listAccessTable,
+  listItemTable,
+  listTable,
+  productTable,
+} from '../../src/database/schema';
 
-export async function mockUser(overrides: Partial<User> = {}) {
+export async function mockUser(overrides: Partial<typeof userTable.$inferInsert> = {}) {
   const data = {
     email: faker.internet.email(),
     password: faker.internet.password(8),
@@ -20,14 +18,17 @@ export async function mockUser(overrides: Partial<User> = {}) {
     ...overrides,
   };
 
-  return await prisma.user.create({ data });
+  const user = (await databaseClient.insert(userTable).values(data).returning())[0];
+  await connection.end();
+  return user;
 }
 
 export async function clearMockedUsers() {
-  return await prisma.user.deleteMany();
+  await databaseClient.delete(userTable);
+  await connection.end();
 }
 
-export async function mockCategory(overrides: Partial<Category> = {}) {
+export async function mockCategory(overrides: Partial<typeof categoryTable.$inferInsert> = {}) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
     const user = await mockUser();
@@ -39,14 +40,18 @@ export async function mockCategory(overrides: Partial<Category> = {}) {
     createdBy,
   };
 
-  return await prisma.category.create({ data });
+  const category = (await databaseClient.insert(categoryTable).values(data).returning())[0];
+  await connection.end();
+
+  return category;
 }
 
 export async function clearMockedCategories() {
-  return await prisma.category.deleteMany();
+  await databaseClient.delete(categoryTable);
+  await connection.end();
 }
 
-export async function mockProduct(overrides: Partial<Product> = {}) {
+export async function mockProduct(overrides: Partial<typeof productTable.$inferInsert> = {}) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
     const user = await mockUser();
@@ -68,55 +73,47 @@ export async function mockProduct(overrides: Partial<Product> = {}) {
     categoryId,
   };
 
-  return await prisma.product.create({ data });
+  const product = (await databaseClient.insert(productTable).values(data).returning())[0];
+  await connection.end();
+
+  return product;
 }
 
 export async function clearMockedProducts() {
-  return await prisma.product.deleteMany();
+  await databaseClient.delete(productTable);
+  await connection.end();
 }
 
-export async function mockList(overrides: Partial<List> = {}) {
+export async function mockList(overrides: Partial<typeof listTable.$inferInsert> = {}) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
     const user = await mockUser();
     createdBy = user.id;
   }
-
   const data = {
     name: faker.random.alpha(8),
     ...overrides,
     createdBy,
   };
 
-  const listAccess = await prisma.listAccess.create({
-    data: {
-      access: 'OWNER',
-      createdByUser: {
-        connect: {
-          id: createdBy,
-        },
-      },
-      user: {
-        connect: {
-          id: createdBy,
-        },
-      },
-      list: {
-        create: data,
-      },
-    },
+  const list = (await databaseClient.insert(listTable).values(data).returning())[0];
+  await databaseClient.insert(listAccessTable).values({
+    access: 'OWNER',
+    createdBy,
+    userId: createdBy,
+    listId: list.id,
   });
-
-  const list = await prisma.list.findUnique({ where: { id: listAccess.listId } });
+  await connection.end();
 
   return list;
 }
 
 export async function clearMockedLists() {
-  return await prisma.list.deleteMany();
+  await databaseClient.delete(listTable);
+  await connection.end();
 }
 
-export async function mockListItem(overrides: Partial<ListItem> = {}) {
+export async function mockListItem(overrides: Partial<typeof listItemTable.$inferInsert> = {}) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
     const user = await mockUser();
@@ -144,14 +141,17 @@ export async function mockListItem(overrides: Partial<ListItem> = {}) {
     amount: faker.datatype.number(),
   };
 
-  return await prisma.listItem.create({ data });
+  const listItem = (await databaseClient.insert(listItemTable).values(data).returning())[0];
+
+  return listItem;
 }
 
 export async function clearMockedListItems() {
-  return await prisma.listItem.deleteMany();
+  await databaseClient.delete(listItemTable);
+  await connection.end();
 }
 
-export async function mockListAccess(overrides: Partial<ListAccess>) {
+export async function mockListAccess(overrides: Partial<typeof listAccessTable.$inferInsert>) {
   let createdBy = overrides.createdBy;
   if (!createdBy) {
     const user = await mockUser();
@@ -170,17 +170,17 @@ export async function mockListAccess(overrides: Partial<ListAccess>) {
     userId = user.id;
   }
 
-  return await prisma.listAccess.create({
-    data: {
-      createdBy,
-      listId,
-      userId,
-      access: Access.READ_WRITE,
-      ...overrides,
-    },
-  });
+  const listAccess = (
+    await databaseClient
+      .insert(listAccessTable)
+      .values({ createdBy, listId, userId, access: 'READ_WRITE', ...overrides })
+      .returning()
+  )[0];
+
+  return listAccess;
 }
 
 export async function clearMockedListAccesses() {
-  return await prisma.listAccess.deleteMany();
+  await databaseClient.delete(listAccessTable);
+  await connection.end();
 }
